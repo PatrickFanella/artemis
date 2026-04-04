@@ -6,25 +6,25 @@ export function MissionLinksBar({ links }: { links: MissionLinks }) {
       href: links.arow,
       label: "3D Tracker",
       sublabel: "NASA AROW",
-      icon: "🛰️",
+      icon: "\u{1F6F0}\uFE0F",
     },
     {
       href: links.dsn,
       label: "Deep Space Network",
       sublabel: "DSN Now",
-      icon: "📡",
+      icon: "\u{1F4E1}",
     },
     {
       href: links.nasa_tv,
       label: "Live Coverage",
       sublabel: "NASA TV",
-      icon: "📺",
+      icon: "\u{1F4FA}",
     },
     {
       href: links.mission_page,
       label: "Mission Page",
       sublabel: "NASA.gov",
-      icon: "🚀",
+      icon: "\u{1F680}",
     },
   ];
 
@@ -36,7 +36,7 @@ export function MissionLinksBar({ links }: { links: MissionLinks }) {
           href={item.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 bg-space-dark border border-space-gray/40 rounded-lg p-3 hover:border-artemis-blue/50 hover:bg-space-gray/20 transition-all group"
+          className="flex items-center gap-2 glass-card glass-card-hover p-3 group"
         >
           <span className="text-xl">{item.icon}</span>
           <div className="min-w-0">

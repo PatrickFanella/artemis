@@ -104,20 +104,20 @@ export function SchedulePage() {
       <div className="flex items-center gap-2 mb-6">
         <button
           onClick={() => setViewMode("events")}
-          className={`px-4 py-2 text-sm rounded-lg transition-colors ${
+          className={`px-4 py-2 text-sm rounded-lg transition-all ${
             viewMode === "events"
-              ? "bg-artemis-blue text-white"
-              : "bg-space-dark text-lunar-white/60 hover:text-lunar-white border border-space-gray/50"
+              ? "bg-artemis-blue text-white shadow-[0_0_12px_rgba(59,130,246,0.2)]"
+              : "glass-card text-lunar-white/60 hover:text-lunar-white"
           }`}
         >
           Detailed Events
         </button>
         <button
           onClick={() => setViewMode("phases")}
-          className={`px-4 py-2 text-sm rounded-lg transition-colors ${
+          className={`px-4 py-2 text-sm rounded-lg transition-all ${
             viewMode === "phases"
-              ? "bg-artemis-blue text-white"
-              : "bg-space-dark text-lunar-white/60 hover:text-lunar-white border border-space-gray/50"
+              ? "bg-artemis-blue text-white shadow-[0_0_12px_rgba(59,130,246,0.2)]"
+              : "glass-card text-lunar-white/60 hover:text-lunar-white"
           }`}
         >
           Mission Phases
@@ -140,12 +140,12 @@ export function SchedulePage() {
                   onClick={() => setSelectedFD(fd)}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg text-sm transition-all border ${
                     isSelected
-                      ? "bg-artemis-blue text-white border-artemis-blue"
+                      ? "bg-artemis-blue text-white border-artemis-blue shadow-[0_0_12px_rgba(59,130,246,0.2)]"
                       : isCurrent
-                        ? "bg-status-active/10 text-status-active border-status-active/30 hover:bg-status-active/20"
+                        ? "bg-status-active/8 text-status-active border-status-active/20 hover:bg-status-active/15"
                         : isPast
-                          ? "bg-space-dark text-lunar-white/40 border-space-gray/30 hover:text-lunar-white/60"
-                          : "bg-space-dark text-lunar-white/60 border-space-gray/50 hover:text-lunar-white"
+                          ? "glass-card text-lunar-white/40 hover:text-lunar-white/60"
+                          : "glass-card text-lunar-white/60 hover:text-lunar-white"
                   }`}
                 >
                   <div className="flex items-center gap-1.5">
@@ -167,7 +167,7 @@ export function SchedulePage() {
 
           {/* Event count & status */}
           {eventsData && (
-            <div className="flex items-center gap-4 mb-4 text-sm text-lunar-white/50">
+            <div className="flex items-center gap-4 mb-4 text-sm text-lunar-white/45">
               <span>{eventsData.total} events</span>
               {selectedFD && (
                 <>
@@ -186,7 +186,7 @@ export function SchedulePage() {
           ) : (
             <div className="space-y-6">
               {eventsByStatus.active && (
-                <div className="bg-status-active/5 border border-status-active/20 rounded-xl p-4">
+                <div className="glass-card glass-card-active p-4">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-active opacity-75" />

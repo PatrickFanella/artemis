@@ -10,25 +10,25 @@ const quickLinks = [
     to: "/missions",
     title: "Campaign",
     desc: "All Artemis missions",
-    icon: "🚀",
+    icon: "\u{1F680}",
   },
   {
     to: "/schedule",
     title: "Schedule",
     desc: "Mission timeline",
-    icon: "📅",
+    icon: "\u{1F4C5}",
   },
   {
     to: "/media",
     title: "Media",
     desc: "Images & videos",
-    icon: "📷",
+    icon: "\u{1F4F7}",
   },
   {
     to: "/updates",
     title: "Updates",
     desc: "Latest news",
-    icon: "📰",
+    icon: "\u{1F4F0}",
   },
 ];
 
@@ -39,11 +39,14 @@ export function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <div className="text-center py-16 mb-12">
-        <h1 className="text-6xl font-bold mb-4">
-          <span className="text-artemis-gold">Artemis</span> Hub
+      <div className="text-center py-16 mb-12 relative">
+        {/* Ambient hero glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[200px] bg-artemis-gold/[0.06] rounded-full blur-[80px] pointer-events-none" />
+        <h1 className="text-6xl md:text-7xl font-display font-bold tracking-tight mb-4 relative">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-artemis-gold via-amber-400 to-artemis-gold">Artemis</span>{" "}
+          <span className="text-lunar-white/90">Hub</span>
         </h1>
-        <p className="text-xl text-lunar-white/60 max-w-2xl mx-auto">
+        <p className="text-xl text-lunar-white/50 max-w-2xl mx-auto relative">
           Tracking humanity's return to the Moon. Real-time updates, mission
           data, and media from NASA's Artemis program.
         </p>
@@ -55,8 +58,11 @@ export function HomePage() {
       ) : mission ? (
         <Link
           to="/active"
-          className="block bg-gradient-to-r from-space-dark to-space-gray/30 border border-status-active/30 rounded-xl p-6 mb-12 hover:border-status-active/50 transition-colors group"
+          className="block glass-card p-6 mb-12 group relative overflow-hidden border-status-active/20 hover:border-status-active/40 transition-all hover:shadow-[0_0_30px_rgba(34,197,94,0.08)]"
         >
+          {/* Subtle gradient accent */}
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-status-active/30 to-transparent" />
+
           <div className="flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-status-active animate-pulse" />
             <span className="text-xs uppercase tracking-wider text-status-active font-medium">
@@ -65,10 +71,10 @@ export function HomePage() {
           </div>
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-2xl font-bold mb-1 group-hover:text-artemis-blue transition-colors">
+              <h2 className="text-2xl font-display font-bold tracking-tight mb-1 group-hover:text-artemis-blue transition-colors">
                 {mission.name}
               </h2>
-              <p className="text-lunar-white/60 mb-3">{mission.tagline}</p>
+              <p className="text-lunar-white/50 mb-3">{mission.tagline}</p>
               <div className="flex items-center gap-4 text-sm text-lunar-white/40">
                 <StatusBadge status={mission.status} />
                 <span>Duration: {mission.duration}</span>
@@ -88,10 +94,10 @@ export function HomePage() {
           <Link
             key={link.to}
             to={link.to}
-            className="bg-space-dark border border-space-gray/50 rounded-xl p-5 hover:border-artemis-blue/50 transition-colors group text-center"
+            className="glass-card glass-card-hover p-5 group text-center"
           >
             <span className="text-3xl mb-3 block">{link.icon}</span>
-            <h3 className="font-medium group-hover:text-artemis-blue transition-colors">
+            <h3 className="font-display font-medium group-hover:text-artemis-blue transition-colors">
               {link.title}
             </h3>
             <p className="text-xs text-lunar-white/40 mt-1">{link.desc}</p>
@@ -103,10 +109,10 @@ export function HomePage() {
       {updates && updates.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Latest Update</h2>
+            <h2 className="text-lg font-display font-semibold tracking-tight">Latest Update</h2>
             <Link
               to="/updates"
-              className="text-sm text-artemis-blue hover:text-artemis-blue/80"
+              className="text-sm text-artemis-blue hover:text-artemis-blue/80 transition-colors"
             >
               View all →
             </Link>
@@ -115,11 +121,11 @@ export function HomePage() {
             href={updates[0]!.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="block bg-space-dark border border-space-gray/50 rounded-xl p-5 hover:border-artemis-blue/50 transition-colors"
+            className="block glass-card glass-card-hover p-5"
           >
             <h3 className="font-medium mb-1">{updates[0]!.title}</h3>
             {updates[0]!.summary && (
-              <p className="text-lunar-white/50 text-sm line-clamp-2">
+              <p className="text-lunar-white/40 text-sm line-clamp-2">
                 {updates[0]!.summary}
               </p>
             )}

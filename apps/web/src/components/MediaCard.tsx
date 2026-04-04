@@ -10,14 +10,14 @@ export function MediaCard({
   return (
     <button
       onClick={onClick}
-      className="text-left group rounded-xl overflow-hidden bg-space-dark border border-space-gray/50 hover:border-artemis-blue/50 transition-colors"
+      className="text-left group glass-card glass-card-hover overflow-hidden"
     >
-      <div className="aspect-video relative overflow-hidden bg-space-gray">
+      <div className="aspect-video relative overflow-hidden bg-space-gray/50">
         {asset.preview_url ? (
           <img
             src={asset.preview_url}
             alt={asset.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
         ) : (
@@ -26,7 +26,7 @@ export function MediaCard({
           </div>
         )}
         {asset.media_type === "video" && (
-          <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
+          <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-0.5 rounded-md border border-white/10">
             Video
           </div>
         )}

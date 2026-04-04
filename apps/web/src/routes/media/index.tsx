@@ -46,11 +46,11 @@ export function MediaPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search NASA media..."
-            className="flex-1 bg-space-dark border border-space-gray/50 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-artemis-blue/50"
+            className="flex-1 glass-card px-4 py-2 text-sm focus:outline-none focus:border-artemis-blue/40 focus:shadow-[0_0_12px_rgba(59,130,246,0.1)]"
           />
           <button
             type="submit"
-            className="px-4 py-2 bg-artemis-blue rounded-lg text-sm font-medium hover:bg-artemis-blue/80 transition-colors"
+            className="px-4 py-2 bg-artemis-blue rounded-xl text-sm font-medium hover:bg-artemis-blue/80 transition-all hover:shadow-[0_0_12px_rgba(59,130,246,0.3)]"
           >
             Search
           </button>
@@ -60,10 +60,10 @@ export function MediaPage() {
             <button
               key={t.key}
               onClick={() => setMediaType(t.key)}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
+              className={`px-4 py-2 rounded-xl text-sm transition-all ${
                 mediaType === t.key
-                  ? "bg-artemis-blue text-white"
-                  : "bg-space-dark border border-space-gray/50 text-lunar-white/60 hover:text-lunar-white"
+                  ? "bg-artemis-blue text-white shadow-[0_0_12px_rgba(59,130,246,0.2)]"
+                  : "glass-card text-lunar-white/60 hover:text-lunar-white"
               }`}
             >
               {t.label}

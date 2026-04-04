@@ -48,10 +48,10 @@ export function ActivePage() {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl md:text-3xl font-bold">{mission.name}</h1>
+            <h1 className="text-2xl md:text-3xl font-display font-bold tracking-tight">{mission.name}</h1>
             <StatusBadge status={mission.status} />
           </div>
-          <p className="text-lunar-white/50 mt-1">{mission.tagline}</p>
+          <p className="text-lunar-white/45 mt-1">{mission.tagline}</p>
         </div>
         <div className="hidden md:flex items-center gap-2">
           <span className="relative flex h-2 w-2">
@@ -92,15 +92,15 @@ export function ActivePage() {
       {/* Current Phase & Next Milestone */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {current_section && (
-          <div className="bg-space-dark border border-status-active/30 rounded-xl p-4">
+          <div className="glass-card glass-card-active p-4">
             <div className="flex items-center gap-2 mb-2">
               <span className="w-2 h-2 rounded-full bg-status-active animate-pulse" />
               <span className="text-xs font-medium text-lunar-white/50 uppercase tracking-wider">
                 Current Phase
               </span>
             </div>
-            <h3 className="font-semibold text-lg">{current_section.name}</h3>
-            <p className="text-sm text-lunar-white/50 mt-1">
+            <h3 className="font-display font-semibold text-lg">{current_section.name}</h3>
+            <p className="text-sm text-lunar-white/45 mt-1">
               {current_section.description}
             </p>
             <span className="text-xs text-lunar-white/30 mt-2 block">
@@ -110,14 +110,14 @@ export function ActivePage() {
         )}
 
         {next_milestone && (
-          <div className="bg-space-dark border border-artemis-blue/30 rounded-xl p-4">
+          <div className="glass-card p-4" style={{ borderColor: "rgba(59, 130, 246, 0.2)" }}>
             <span className="text-xs font-medium text-lunar-white/50 uppercase tracking-wider">
               Next Milestone
             </span>
-            <h3 className="font-semibold text-lg mt-2">
+            <h3 className="font-display font-semibold text-lg mt-2">
               {next_milestone.title}
             </h3>
-            <p className="text-sm text-lunar-white/50 mt-1">
+            <p className="text-sm text-lunar-white/45 mt-1">
               {next_milestone.description}
             </p>
             {next_milestone.planned_at && (
@@ -145,7 +145,7 @@ export function ActivePage() {
           action={
             <Link
               to="/schedule"
-              className="text-sm text-artemis-blue hover:text-artemis-blue/80"
+              className="text-sm text-artemis-blue hover:text-artemis-blue/80 transition-colors"
             >
               Full schedule →
             </Link>
@@ -176,9 +176,9 @@ export function ActivePage() {
               return (
                 <div
                   key={sec.id}
-                  className={`flex items-center gap-3 p-3 rounded-lg ${
+                  className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
                     isActive
-                      ? "bg-status-active/10 border border-status-active/20"
+                      ? "bg-status-active/8 border border-status-active/15 shadow-[0_0_12px_rgba(34,197,94,0.04)]"
                       : ""
                   }`}
                 >
@@ -201,7 +201,7 @@ export function ActivePage() {
                         />
                       </svg>
                     ) : (
-                      <span className="flex h-3 w-3 rounded-full border border-space-gray" />
+                      <span className="flex h-3 w-3 rounded-full border border-white/10" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -229,16 +229,16 @@ export function ActivePage() {
                   key={sec.id}
                   className={`flex-1 h-2 rounded-full transition-all ${
                     sec.status === "completed"
-                      ? "bg-status-completed"
+                      ? "bg-status-completed/60"
                       : sec.status === "active"
-                        ? "bg-status-active animate-pulse"
-                        : "bg-space-gray/50"
+                        ? "bg-gradient-to-r from-status-active to-artemis-cyan animate-pulse"
+                        : "bg-white/[0.04]"
                   }`}
                   title={sec.name}
                 />
               ))}
             </div>
-            <div className="flex justify-between mt-1 text-xs text-lunar-white/30">
+            <div className="flex justify-between mt-1 text-xs text-lunar-white/25">
               <span>Launch</span>
               <span>Splashdown</span>
             </div>
@@ -258,7 +258,7 @@ export function ActivePage() {
           action={
             <Link
               to="/updates"
-              className="text-sm text-artemis-blue hover:text-artemis-blue/80"
+              className="text-sm text-artemis-blue hover:text-artemis-blue/80 transition-colors"
             >
               View all →
             </Link>
@@ -279,7 +279,7 @@ export function ActivePage() {
           action={
             <Link
               to="/media"
-              className="text-sm text-artemis-blue hover:text-artemis-blue/80"
+              className="text-sm text-artemis-blue hover:text-artemis-blue/80 transition-colors"
             >
               View gallery →
             </Link>
@@ -289,13 +289,13 @@ export function ActivePage() {
             {latest_media.map((asset) => (
               <div
                 key={asset.nasa_id}
-                className="aspect-video rounded-lg overflow-hidden bg-space-gray"
+                className="aspect-video rounded-xl overflow-hidden bg-space-gray/30 border border-white/[0.04]"
               >
                 {asset.preview_url && (
                   <img
                     src={asset.preview_url}
                     alt={asset.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
                 )}

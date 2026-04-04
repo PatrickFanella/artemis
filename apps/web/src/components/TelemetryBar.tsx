@@ -18,7 +18,7 @@ function TelemetryStat({
 }) {
   return (
     <div className="text-center">
-      <p className="text-2xl font-bold text-artemis-gold">{value}</p>
+      <p className="text-2xl font-display font-bold text-artemis-gold">{value}</p>
       <p className="text-xs text-lunar-white/50 uppercase tracking-wider">
         {unit}
       </p>
@@ -33,7 +33,7 @@ export function TelemetryBar({
   telemetry: TelemetrySnapshot;
 }) {
   return (
-    <div className="bg-space-dark border border-space-gray/50 rounded-xl p-6 mb-6">
+    <div className="glass-card p-6 mb-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         <TelemetryStat
           label="Mission Elapsed"

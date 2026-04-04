@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-space-black: #0b0d17;
-  --color-space-dark: #1b1d2a;
-  --color-space-gray: #2b2d42;
+  --color-space-black: #0a0d15;
+  --color-space-dark: #111827;
+  --color-space-gray: #1f2937;
   --color-lunar-white: #f0f0f5;
   --color-artemis-blue: #3b82f6;
   --color-artemis-gold: #f59e0b;
@@ -18,34 +18,120 @@
   --color-cat-communication: #a855f7;
   --color-cat-system: #f59e0b;
   --color-cat-science: #06b6d4;
+
+  --font-display: "Space Grotesk", system-ui, sans-serif;
 }
+
+/* ─── Base ─── */
 
 body {
   @apply bg-space-black text-lunar-white min-h-screen antialiased;
   font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
 
-/* Live clock monospace for MET display */
+/* ─── Typography ─── */
+
 .met-display {
   font-family: "JetBrains Mono", "Fira Code", "SF Mono", "Consolas", monospace;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.05em;
 }
 
-/* Glow effect for live indicators */
+/* ─── Glass Card System ─── */
+
+.glass-card {
+  background: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.75rem;
+  transition: all 300ms ease-out;
+}
+
+.glass-card-hover:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(17, 24, 39, 0.8);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.08),
+              0 4px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.glass-card-active {
+  border-color: rgba(34, 197, 94, 0.3);
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.06),
+              0 0 0 1px rgba(34, 197, 94, 0.1);
+}
+
+/* ─── Enhanced Glow Effects ─── */
+
 .glow-green {
-  box-shadow: 0 0 8px rgba(34, 197, 94, 0.4), 0 0 20px rgba(34, 197, 94, 0.1);
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.4),
+              0 0 24px rgba(34, 197, 94, 0.15),
+              0 0 48px rgba(34, 197, 94, 0.05);
 }
 
 .glow-blue {
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.4),
+              0 0 24px rgba(59, 130, 246, 0.15),
+              0 0 48px rgba(59, 130, 246, 0.05);
 }
 
 .glow-gold {
-  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4), 0 0 20px rgba(245, 158, 11, 0.1);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4),
+              0 0 24px rgba(245, 158, 11, 0.15),
+              0 0 48px rgba(245, 158, 11, 0.05);
 }
 
-/* Trajectory SVG animations */
+.glow-cyan {
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.4),
+              0 0 24px rgba(6, 182, 212, 0.15),
+              0 0 48px rgba(6, 182, 212, 0.05);
+}
+
+/* ─── Atmospheric Background ─── */
+
+.atmosphere {
+  position: relative;
+}
+
+.atmosphere::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 70%);
+}
+
+/* Noise grain overlay */
+.atmosphere::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* Ambient glow orb */
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Animations ─── */
+
 @keyframes orbit-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
@@ -60,7 +146,37 @@ body {
   100% { transform: translateY(100%); }
 }
 
-/* Category badge colors */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ─── Category Badges ─── */
+
 .cat-propulsion { @apply bg-cat-propulsion/20 text-cat-propulsion border-cat-propulsion/30; }
 .cat-navigation { @apply bg-cat-navigation/20 text-cat-navigation border-cat-navigation/30; }
 .cat-crew { @apply bg-cat-crew/20 text-cat-crew border-cat-crew/30; }
@@ -68,12 +184,13 @@ body {
 .cat-system { @apply bg-cat-system/20 text-cat-system border-cat-system/30; }
 .cat-science { @apply bg-cat-science/20 text-cat-science border-cat-science/30; }
 
-/* Scrollbar for dark theme */
+/* ─── Scrollbar ─── */
+
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-space-dark);
+  background: var(--color-space-black);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-space-gray);
@@ -81,4 +198,16 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-artemis-blue);
+}
+
+/* ─── Reduced Motion ─── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

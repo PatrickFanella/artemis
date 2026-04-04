@@ -1,0 +1,42 @@
+networks:
+  projects:
+    name: projects
+    external: true
+  monitoring:
+    name: monitoring
+    external: true
+
+services:
+  artemis-api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: artemis-api
+    networks: [projects, monitoring]
+    environment:
+      - PORT=8080
+      - DB_PATH=/data/artemis.db
+      - LOG_LEVEL=info
+    volumes:
+      - ./data/artemis:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q -O - http://127.0.0.1:8080/healthz >/dev/null 2>&1 || exit 1']
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    labels:
+      - com.centurylinklabs.watchtower.enable=false
+    restart: unless-stopped
+
+  artemis-web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: artemis-web
+    networks: [projects]
+    depends_on:
+      artemis-api:
+        condition: service_healthy
+    labels:
+      - com.centurylinklabs.watchtower.enable=false
+    restart: unless-stopped

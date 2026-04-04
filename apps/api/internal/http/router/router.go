@@ -9,6 +9,7 @@ import (
 	"github.com/onnwee/artemis/apps/api/internal/http/middleware"
 	"github.com/onnwee/artemis/apps/api/internal/service"
 	"github.com/onnwee/artemis/apps/api/internal/service/nasa"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type Services struct {
@@ -25,6 +26,7 @@ func New(svc Services) http.Handler {
 	r.Use(middleware.CORS)
 	r.Use(chimw.Recoverer)
 
+	r.Handle("/metrics", promhttp.Handler())
 	r.Get("/healthz", handlers.Health)
 
 	mh := handlers.NewMissionHandler(svc.Mission)

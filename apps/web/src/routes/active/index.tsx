@@ -78,6 +78,7 @@ export function ActivePage() {
             event={current_event}
             label="Current Activity"
             accent="green"
+            launchDate={clock.launch_time}
           />
         )}
         {next_event && (
@@ -85,6 +86,7 @@ export function ActivePage() {
             event={next_event}
             label="Coming Up"
             accent="blue"
+            launchDate={clock.launch_time}
           />
         )}
       </div>
@@ -154,6 +156,7 @@ export function ActivePage() {
           <EventTimeline
             events={upcoming_events}
             currentMet={clock.met_seconds}
+            launchDate={clock.launch_time}
           />
         </DashboardSection>
 
@@ -161,6 +164,7 @@ export function ActivePage() {
           <EventTimeline
             events={recent_events}
             currentMet={clock.met_seconds}
+            launchDate={clock.launch_time}
             compact
           />
         </DashboardSection>

@@ -199,6 +199,7 @@ export function SchedulePage() {
                   <EventTimeline
                     events={[eventsByStatus.active]}
                     currentMet={currentMET}
+                    launchDate={mission.launch_date ?? undefined}
                   />
                 </div>
               )}
@@ -207,6 +208,7 @@ export function SchedulePage() {
                 <EventTimeline
                   events={eventsByStatus.upcoming}
                   currentMet={currentMET}
+                  launchDate={mission.launch_date ?? undefined}
                   title="Upcoming"
                 />
               )}
@@ -215,6 +217,7 @@ export function SchedulePage() {
                 <EventTimeline
                   events={[...eventsByStatus.completed].reverse()}
                   currentMet={currentMET}
+                  launchDate={mission.launch_date ?? undefined}
                   title="Completed"
                   compact
                 />

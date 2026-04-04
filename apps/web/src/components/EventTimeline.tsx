@@ -29,6 +29,16 @@ function formatMET(seconds: number): string {
   return `T+${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 }
 
+function formatLocalTime(launchDate: string, metSeconds: number): string {
+  const eventTime = new Date(new Date(launchDate).getTime() + metSeconds * 1000);
+  return eventTime.toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 function formatCountdown(seconds: number): string {
   if (seconds < 60) return `in ${seconds}s`;
   if (seconds < 3600) return `in ${Math.floor(seconds / 60)}m`;
@@ -56,10 +66,12 @@ function formatTimeAgo(seconds: number): string {
 function EventRow({
   event,
   currentMet,
+  launchDate,
   compact,
 }: {
   event: MissionEvent;
   currentMet: number;
+  launchDate?: string;
   compact?: boolean;
 }) {
   const isActive = event.status === "active";
@@ -99,6 +111,11 @@ function EventRow({
           <span className="met-display text-xs text-lunar-white/40">
             {formatMET(event.met_seconds)}
           </span>
+          {launchDate && (
+            <span className="text-xs text-artemis-cyan/60">
+              {formatLocalTime(launchDate, event.met_seconds)}
+            </span>
+          )}
           {!compact && (
             <span className="text-xs text-lunar-white/30">
               {isCompleted
@@ -125,11 +142,13 @@ function EventRow({
 export function EventTimeline({
   events,
   currentMet,
+  launchDate,
   title,
   compact,
 }: {
   events: MissionEvent[];
   currentMet: number;
+  launchDate?: string;
   title?: string;
   compact?: boolean;
 }) {
@@ -148,6 +167,7 @@ export function EventTimeline({
             key={event.id}
             event={event}
             currentMet={currentMet}
+            launchDate={launchDate}
             compact={compact}
           />
         ))}
@@ -160,10 +180,12 @@ export function CurrentEventCard({
   event,
   label,
   accent,
+  launchDate,
 }: {
   event: MissionEvent;
   label: string;
   accent: "green" | "blue";
+  launchDate?: string;
 }) {
   const borderColor = accent === "green" ? "border-status-active/30" : "border-artemis-blue/30";
   const glowClass = accent === "green" ? "glow-green" : "glow-blue";
@@ -188,6 +210,11 @@ export function CurrentEventCard({
       <p className="text-sm text-lunar-white/50 mt-1">{event.description}</p>
       <div className="met-display text-xs text-lunar-white/30 mt-2">
         {formatMET(event.met_seconds)} · FD{event.flight_day.toString().padStart(2, "0")}
+        {launchDate && (
+          <span className="text-artemis-cyan/50 ml-2">
+            {formatLocalTime(launchDate, event.met_seconds)}
+          </span>
+        )}
       </div>
     </div>
   );

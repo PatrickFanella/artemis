@@ -14,11 +14,11 @@ export function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col atmosphere">
+    <div className="min-h-screen flex flex-col atmosphere overflow-hidden">
       {/* Ambient glow orbs */}
-      <div className="ambient-orb w-[500px] h-[500px] bg-artemis-gold/[0.03] top-[-200px] left-[20%] fixed" />
-      <div className="ambient-orb w-[400px] h-[400px] bg-artemis-blue/[0.04] top-[40%] right-[-100px] fixed" />
-      <div className="ambient-orb w-[300px] h-[300px] bg-artemis-cyan/[0.03] bottom-[-100px] left-[10%] fixed" />
+      <div className="ambient-orb w-[600px] h-[600px] bg-artemis-blue/[0.07] top-[-200px] left-[15%] fixed" />
+      <div className="ambient-orb w-[500px] h-[500px] bg-artemis-gold/[0.05] top-[50%] right-[-100px] fixed" />
+      <div className="ambient-orb w-[400px] h-[400px] bg-artemis-cyan/[0.04] bottom-[-150px] left-[30%] fixed" />
 
       <header className="border-b border-white/[0.06] bg-space-dark/60 backdrop-blur-xl sticky top-0 z-50">
         <nav className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between relative z-10">

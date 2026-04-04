@@ -14,10 +14,15 @@ export function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b border-space-gray/50 bg-space-dark/80 backdrop-blur-sm sticky top-0 z-50">
-        <nav className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="text-xl font-bold tracking-tight">
+    <div className="min-h-screen flex flex-col atmosphere">
+      {/* Ambient glow orbs */}
+      <div className="ambient-orb w-[500px] h-[500px] bg-artemis-gold/[0.03] top-[-200px] left-[20%] fixed" />
+      <div className="ambient-orb w-[400px] h-[400px] bg-artemis-blue/[0.04] top-[40%] right-[-100px] fixed" />
+      <div className="ambient-orb w-[300px] h-[300px] bg-artemis-cyan/[0.03] bottom-[-100px] left-[10%] fixed" />
+
+      <header className="border-b border-white/[0.06] bg-space-dark/60 backdrop-blur-xl sticky top-0 z-50">
+        <nav className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between relative z-10">
+          <Link to="/" className="text-xl font-display font-bold tracking-tight">
             <span className="text-artemis-gold">Artemis</span>{" "}
             <span className="text-lunar-white/80">Hub</span>
           </Link>
@@ -30,7 +35,7 @@ export function Layout() {
                 to={item.to}
                 end={item.to === "/"}
                 className={({ isActive }) =>
-                  `text-sm transition-colors flex items-center gap-1.5 ${isActive ? "text-artemis-blue font-medium" : "text-lunar-white/70 hover:text-lunar-white"}`
+                  `text-sm transition-colors flex items-center gap-1.5 ${isActive ? "text-artemis-blue font-medium" : "text-lunar-white/60 hover:text-lunar-white"}`
                 }
               >
                 {item.live && (
@@ -77,7 +82,7 @@ export function Layout() {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden border-t border-space-gray/50 bg-space-dark">
+          <div className="md:hidden border-t border-white/[0.06] bg-space-dark/90 backdrop-blur-xl">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
@@ -85,7 +90,7 @@ export function Layout() {
                 end={item.to === "/"}
                 onClick={() => setMenuOpen(false)}
                 className={({ isActive }) =>
-                  `block px-4 py-3 text-sm border-b border-space-gray/20 transition-colors ${isActive ? "text-artemis-blue bg-space-gray/20" : "text-lunar-white/70"}`
+                  `block px-4 py-3 text-sm border-b border-white/[0.04] transition-colors ${isActive ? "text-artemis-blue bg-artemis-blue/5" : "text-lunar-white/60"}`
                 }
               >
                 {item.label}
@@ -95,12 +100,12 @@ export function Layout() {
         )}
       </header>
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 py-8 w-full">
+      <main className="flex-1 max-w-7xl mx-auto px-4 py-8 w-full relative z-10">
         <Outlet />
       </main>
 
-      <footer className="border-t border-space-gray/50 bg-space-dark/50">
-        <div className="max-w-7xl mx-auto px-4 py-6 text-center text-sm text-lunar-white/40">
+      <footer className="border-t border-white/[0.06] bg-space-dark/30 backdrop-blur-sm relative z-10">
+        <div className="max-w-7xl mx-auto px-4 py-6 text-center text-sm text-lunar-white/30">
           Artemis Hub — Powered by NASA Open Data
         </div>
       </footer>

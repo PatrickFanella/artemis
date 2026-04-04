@@ -10,12 +10,12 @@ const categoryColors: Record<string, string> = {
 };
 
 const categoryIcons: Record<string, string> = {
-  propulsion: "🔥",
-  navigation: "🧭",
-  crew: "👨‍🚀",
-  communication: "📡",
-  system: "⚙️",
-  science: "🔬",
+  propulsion: "\u{1F525}",
+  navigation: "\u{1F9ED}",
+  crew: "\u{1F468}\u200D\u{1F680}",
+  communication: "\u{1F4E1}",
+  system: "\u2699\uFE0F",
+  science: "\u{1F52C}",
 };
 
 function formatMET(seconds: number): string {
@@ -68,12 +68,12 @@ function EventRow({
 
   return (
     <div
-      className={`flex items-start gap-3 p-3 rounded-lg transition-colors ${
+      className={`flex items-start gap-3 p-3 rounded-lg transition-all ${
         isActive
-          ? "bg-status-active/10 border border-status-active/30"
+          ? "bg-status-active/8 border border-status-active/20 shadow-[0_0_12px_rgba(34,197,94,0.06)]"
           : isCompleted
             ? "opacity-60"
-            : "hover:bg-space-gray/20"
+            : "hover:bg-white/[0.03]"
       }`}
     >
       {/* Status dot */}
@@ -84,17 +84,17 @@ function EventRow({
             <span className="relative inline-flex rounded-full h-3 w-3 bg-status-active" />
           </span>
         ) : isCompleted ? (
-          <span className="flex h-3 w-3 rounded-full bg-status-completed" />
+          <span className="flex h-3 w-3 rounded-full bg-status-completed/60" />
         ) : (
-          <span className="flex h-3 w-3 rounded-full border border-space-gray bg-space-dark" />
+          <span className="flex h-3 w-3 rounded-full border border-white/10 bg-space-dark" />
         )}
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className={`text-xs px-1.5 py-0.5 rounded border ${categoryColors[event.category] || "bg-space-gray/20 text-lunar-white/50 border-space-gray/30"}`}>
-            {categoryIcons[event.category] || "•"} {event.category}
+          <span className={`text-xs px-1.5 py-0.5 rounded border backdrop-blur-sm ${categoryColors[event.category] || "bg-space-gray/20 text-lunar-white/50 border-space-gray/30"}`}>
+            {categoryIcons[event.category] || "\u2022"} {event.category}
           </span>
           <span className="met-display text-xs text-lunar-white/40">
             {formatMET(event.met_seconds)}
@@ -113,7 +113,7 @@ function EventRow({
           {event.title}
         </h4>
         {!compact && (
-          <p className="text-sm text-lunar-white/50 mt-0.5 line-clamp-2">
+          <p className="text-sm text-lunar-white/40 mt-0.5 line-clamp-2">
             {event.description}
           </p>
         )}
@@ -138,7 +138,7 @@ export function EventTimeline({
   return (
     <div>
       {title && (
-        <h3 className="text-sm font-medium text-lunar-white/60 uppercase tracking-wider mb-3">
+        <h3 className="text-sm font-medium text-lunar-white/50 uppercase tracking-wider mb-3">
           {title}
         </h3>
       )}
@@ -165,11 +165,11 @@ export function CurrentEventCard({
   label: string;
   accent: "green" | "blue";
 }) {
-  const borderColor = accent === "green" ? "border-status-active/40" : "border-artemis-blue/40";
+  const borderColor = accent === "green" ? "border-status-active/30" : "border-artemis-blue/30";
   const glowClass = accent === "green" ? "glow-green" : "glow-blue";
 
   return (
-    <div className={`bg-space-dark border ${borderColor} rounded-xl p-4 ${glowClass}`}>
+    <div className={`glass-card border ${borderColor} p-4 ${glowClass}`}>
       <div className="flex items-center gap-2 mb-2">
         {accent === "green" && (
           <span className="relative flex h-2 w-2">
@@ -180,12 +180,12 @@ export function CurrentEventCard({
         <span className="text-xs font-medium uppercase tracking-wider text-lunar-white/50">
           {label}
         </span>
-        <span className={`text-xs px-1.5 py-0.5 rounded border ${categoryColors[event.category] || ""}`}>
+        <span className={`text-xs px-1.5 py-0.5 rounded border backdrop-blur-sm ${categoryColors[event.category] || ""}`}>
           {categoryIcons[event.category]} {event.category}
         </span>
       </div>
-      <h3 className="font-semibold text-lg">{event.title}</h3>
-      <p className="text-sm text-lunar-white/60 mt-1">{event.description}</p>
+      <h3 className="font-display font-semibold text-lg">{event.title}</h3>
+      <p className="text-sm text-lunar-white/50 mt-1">{event.description}</p>
       <div className="met-display text-xs text-lunar-white/30 mt-2">
         {formatMET(event.met_seconds)} · FD{event.flight_day.toString().padStart(2, "0")}
       </div>

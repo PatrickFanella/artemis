@@ -33,10 +33,10 @@ export function UpdatesPage() {
           <button
             key={s.key}
             onClick={() => setSource(s.key)}
-            className={`px-4 py-2 rounded-lg text-sm transition-colors ${
+            className={`px-4 py-2 rounded-xl text-sm transition-all ${
               source === s.key
-                ? "bg-artemis-blue text-white"
-                : "bg-space-dark border border-space-gray/50 text-lunar-white/60 hover:text-lunar-white"
+                ? "bg-artemis-blue text-white shadow-[0_0_12px_rgba(59,130,246,0.2)]"
+                : "glass-card text-lunar-white/60 hover:text-lunar-white"
             }`}
           >
             {s.label}

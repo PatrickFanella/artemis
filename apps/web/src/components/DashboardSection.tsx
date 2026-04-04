@@ -12,7 +12,7 @@ export function DashboardSection({
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">{title}</h2>
+        <h2 className="text-lg font-display font-semibold tracking-tight">{title}</h2>
         {action}
       </div>
       {children}

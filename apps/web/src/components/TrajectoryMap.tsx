@@ -42,12 +42,12 @@ export function TrajectoryMap({
         : "#3b82f6";
 
   return (
-    <div className="bg-space-dark border border-space-gray/50 rounded-xl p-4 overflow-hidden">
+    <div className="glass-card p-4 overflow-hidden">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-xs font-medium text-lunar-white/50 uppercase tracking-wider">
           Trajectory
         </h3>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-space-gray/50 text-lunar-white/60">
+        <span className="text-xs px-2 py-0.5 rounded-full bg-space-gray/30 border border-white/[0.06] text-lunar-white/60 backdrop-blur-sm">
           {trajectory.phase_label}
         </span>
       </div>
@@ -73,7 +73,7 @@ export function TrajectoryMap({
         <path
           d={`M ${earthX} ${midY} Q ${pathMidX} ${pathCtrlY} ${moonX} ${midY}`}
           fill="none"
-          stroke="#2b2d42"
+          stroke="rgba(255,255,255,0.08)"
           strokeWidth="2"
           strokeDasharray="6 4"
         />
@@ -88,9 +88,19 @@ export function TrajectoryMap({
           opacity="0.6"
         />
 
+        {/* Traveled path glow */}
+        <path
+          d={`M ${earthX} ${midY} Q ${pathMidX} ${pathCtrlY} ${moonX} ${midY}`}
+          fill="none"
+          stroke={phaseColor}
+          strokeWidth="6"
+          strokeDasharray={`${normPos * 800} 800`}
+          opacity="0.1"
+          filter="url(#pathGlow)"
+        />
+
         {/* Earth */}
-        <circle cx={earthX} cy={midY} r="22" fill="#1e40af" opacity="0.3" />
-        <circle cx={earthX} cy={midY} r="18" fill="#3b82f6" />
+        <circle cx={earthX} cy={midY} r="24" fill={`${phaseColor}10`} />
         <circle cx={earthX} cy={midY} r="18" fill="url(#earthGrad)" />
         <text
           x={earthX}
@@ -98,14 +108,13 @@ export function TrajectoryMap({
           textAnchor="middle"
           fill="#f0f0f5"
           fontSize="11"
-          opacity="0.6"
+          opacity="0.5"
         >
           Earth
         </text>
 
         {/* Moon */}
-        <circle cx={moonX} cy={midY} r="16" fill="#374151" opacity="0.3" />
-        <circle cx={moonX} cy={midY} r="12" fill="#9ca3af" />
+        <circle cx={moonX} cy={midY} r="18" fill="rgba(156,163,175,0.08)" />
         <circle cx={moonX} cy={midY} r="12" fill="url(#moonGrad)" />
         <text
           x={moonX}
@@ -113,27 +122,29 @@ export function TrajectoryMap({
           textAnchor="middle"
           fill="#f0f0f5"
           fontSize="11"
-          opacity="0.6"
+          opacity="0.5"
         >
           Moon
         </text>
 
         {/* Spacecraft */}
         <g>
-          {/* Glow */}
+          {/* Outer glow */}
+          <circle cx={scX} cy={scY} r="12" fill={phaseColor} opacity="0.08" />
           <circle cx={scX} cy={scY} r="8" fill={phaseColor} opacity="0.15" />
           <circle cx={scX} cy={scY} r="5" fill={phaseColor} opacity="0.3" />
           {/* Ship dot */}
           <circle cx={scX} cy={scY} r="4" fill={phaseColor} />
-          <circle cx={scX} cy={scY} r="3" fill="white" />
+          <circle cx={scX} cy={scY} r="2.5" fill="white" />
           {/* Label */}
           <text
             x={scX}
-            y={scY - 14}
+            y={scY - 16}
             textAnchor="middle"
             fill="#f59e0b"
             fontSize="10"
             fontWeight="bold"
+            style={{ filter: "drop-shadow(0 0 4px rgba(245,158,11,0.4))" }}
           >
             ORION
           </text>
@@ -145,7 +156,7 @@ export function TrajectoryMap({
           y={midY + 50}
           fill="#f0f0f5"
           fontSize="10"
-          opacity="0.4"
+          opacity="0.35"
         >
           {formatDistanceShort(trajectory.distance_from_earth_km)} from Earth
         </text>
@@ -155,7 +166,7 @@ export function TrajectoryMap({
           textAnchor="end"
           fill="#f0f0f5"
           fontSize="10"
-          opacity="0.4"
+          opacity="0.35"
         >
           {formatDistanceShort(trajectory.distance_from_moon_km)} to Moon
         </text>
@@ -167,12 +178,12 @@ export function TrajectoryMap({
           textAnchor="middle"
           fill="#f0f0f5"
           fontSize="10"
-          opacity="0.4"
+          opacity="0.35"
         >
           {trajectory.velocity_kmh.toLocaleString()} km/h
         </text>
 
-        {/* Gradients */}
+        {/* Gradients & Filters */}
         <defs>
           <radialGradient id="earthGrad">
             <stop offset="0%" stopColor="#60a5fa" />
@@ -184,25 +195,28 @@ export function TrajectoryMap({
             <stop offset="60%" stopColor="#9ca3af" />
             <stop offset="100%" stopColor="#6b7280" />
           </radialGradient>
+          <filter id="pathGlow">
+            <feGaussianBlur stdDeviation="3" />
+          </filter>
         </defs>
       </svg>
 
       {/* Stats row */}
-      <div className="grid grid-cols-3 gap-4 mt-3 pt-3 border-t border-space-gray/30">
+      <div className="grid grid-cols-3 gap-4 mt-3 pt-3 border-t border-white/[0.06]">
         <div className="text-center">
-          <p className="text-lg font-bold text-artemis-blue">
+          <p className="text-lg font-display font-bold text-artemis-blue">
             {formatDistance(trajectory.distance_from_earth_km)}
           </p>
           <p className="text-xs text-lunar-white/40">From Earth</p>
         </div>
         <div className="text-center">
-          <p className="text-lg font-bold text-artemis-gold">
+          <p className="text-lg font-display font-bold text-artemis-gold">
             {trajectory.velocity_kmh.toLocaleString()}
           </p>
           <p className="text-xs text-lunar-white/40">km/h</p>
         </div>
         <div className="text-center">
-          <p className="text-lg font-bold text-lunar-white/80">
+          <p className="text-lg font-display font-bold text-lunar-white/80">
             {formatDistance(trajectory.distance_from_moon_km)}
           </p>
           <p className="text-xs text-lunar-white/40">To Moon</p>

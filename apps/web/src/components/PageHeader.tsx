@@ -7,9 +7,9 @@ export function PageHeader({
 }) {
   return (
     <div className="mb-8">
-      <h1 className="text-3xl font-bold">{title}</h1>
+      <h1 className="text-3xl font-display font-bold tracking-tight">{title}</h1>
       {subtitle && (
-        <p className="mt-2 text-lunar-white/60 text-lg">{subtitle}</p>
+        <p className="mt-2 text-lunar-white/50 text-lg">{subtitle}</p>
       )}
     </div>
   );

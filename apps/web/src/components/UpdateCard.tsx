@@ -8,9 +8,9 @@ const sourceLabels: Record<string, string> = {
 };
 
 const sourceColors: Record<string, string> = {
-  artemis_blog: "bg-artemis-gold/20 text-artemis-gold",
-  nasa_news: "bg-artemis-blue/20 text-artemis-blue",
-  iotd: "bg-purple-500/20 text-purple-400",
+  artemis_blog: "bg-artemis-gold/15 text-artemis-gold border-artemis-gold/20",
+  nasa_news: "bg-artemis-blue/15 text-artemis-blue border-artemis-blue/20",
+  iotd: "bg-purple-500/15 text-purple-400 border-purple-500/20",
 };
 
 export function UpdateCard({ update }: { update: BlogUpdate }) {
@@ -23,7 +23,7 @@ export function UpdateCard({ update }: { update: BlogUpdate }) {
       href={update.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block bg-space-dark border border-space-gray/50 rounded-xl p-5 hover:border-artemis-blue/50 transition-colors group"
+      className="block glass-card glass-card-hover p-5 group"
     >
       <div className="flex items-start gap-4">
         {update.image_url && (
@@ -36,7 +36,7 @@ export function UpdateCard({ update }: { update: BlogUpdate }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span
-              className={`text-xs px-2 py-0.5 rounded-full ${sourceColors[update.source] ?? "bg-space-gray text-lunar-white/60"}`}
+              className={`text-xs px-2 py-0.5 rounded-full border backdrop-blur-sm ${sourceColors[update.source] ?? "bg-space-gray/50 text-lunar-white/60 border-space-gray/30"}`}
             >
               {sourceLabels[update.source] ?? update.source}
             </span>
@@ -46,7 +46,7 @@ export function UpdateCard({ update }: { update: BlogUpdate }) {
             {update.title}
           </h3>
           {update.summary && (
-            <p className="text-lunar-white/50 text-sm mt-1 line-clamp-2">
+            <p className="text-lunar-white/40 text-sm mt-1 line-clamp-2">
               {update.summary}
             </p>
           )}

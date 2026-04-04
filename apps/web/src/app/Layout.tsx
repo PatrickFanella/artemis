@@ -106,7 +106,27 @@ export function Layout() {
 
       <footer className="border-t border-white/[0.06] bg-space-dark/30 backdrop-blur-sm relative z-10">
         <div className="max-w-7xl mx-auto px-4 py-6 text-center text-sm text-lunar-white/30">
-          Artemis Hub — Powered by NASA Open Data
+          <p>Artemis Hub — Powered by NASA Open Data</p>
+          <p className="mt-1.5 text-xs text-lunar-white/20">
+            Built by{" "}
+            <a
+              href="https://subcult.tv"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-lunar-white/30 hover:text-artemis-gold/60 transition-colors"
+            >
+              SUBCULT
+            </a>
+            {" · "}
+            <a
+              href="https://www.patreon.com/c/subcult"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-lunar-white/30 hover:text-artemis-gold/60 transition-colors"
+            >
+              Support the project
+            </a>
+          </p>
         </div>
       </footer>
     </div>

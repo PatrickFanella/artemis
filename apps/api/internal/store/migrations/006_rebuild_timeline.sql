@@ -53,7 +53,7 @@ INSERT INTO mission_events (id, mission_id, met_seconds, flight_day, category, t
 ('e017', 'artemis-2', 54000, 1, 'crew',       'Crew Sleep Period (4.5 hrs)', 'Second sleep opportunity before TLI day begins.'),
 
 -- ── FD02: Trans-Lunar Injection ───────────────────────────────────────
-('e018', 'artemis-2', 75600, 2, 'crew',       'Crew Wakeup & Daily Planning', 'Morning health checks, pulse oximetry, and daily planning conference.'),
+('e018', 'artemis-2', 61200, 2, 'crew',       'Crew Wakeup', 'Crew wakes from second sleep period. Personal hygiene, breakfast, and pre-activity prep.'),
 ('e019', 'artemis-2', 80100, 2, 'crew',       'Exercise Test', 'First crew exercise session — validating exercise protocols in Orion.'),
 ('e020', 'artemis-2', 82800, 2, 'science',    'NatGeo Documentary Setup', 'National Geographic crew configures cameras for documentary filming.'),
 ('e021', 'artemis-2', 86400, 2, 'propulsion', 'Trans-Lunar Injection Burn', 'The critical burn that sends Orion and crew toward the Moon — they leave Earth orbit behind.'),
@@ -64,7 +64,7 @@ INSERT INTO mission_events (id, mission_id, met_seconds, flight_day, category, t
 ('e026', 'artemis-2', 118800, 2, 'crew',      'Crew Sleep Period (8.5 hrs)', 'First full sleep period — crew rests as Orion coasts toward the Moon.'),
 
 -- ── FD03: Outbound Coast Day 1 ────────────────────────────────────────
-('e027', 'artemis-2', 161100, 3, 'crew',      'Crew Wakeup & Daily Planning', 'Morning health checks and planning conference.'),
+('e027', 'artemis-2', 147600, 3, 'crew',      'Crew Wakeup', 'Crew wakes after first full sleep. Personal time, hygiene, and breakfast before scheduled activities.'),
 ('e028', 'artemis-2', 162900, 3, 'science',   'NatGeo Documentary Work', 'Continued National Geographic filming and interviews.'),
 ('e029', 'artemis-2', 169200, 3, 'propulsion', 'Outbound Trajectory Correction 1', 'First mid-course correction burn to fine-tune the path to the Moon.'),
 ('e030', 'artemis-2', 174600, 3, 'crew',      'Meal Period', 'Crew lunch — rehydratable food pouches in microgravity.'),
@@ -76,7 +76,7 @@ INSERT INTO mission_events (id, mission_id, met_seconds, flight_day, category, t
 ('e036', 'artemis-2', 205200, 3, 'crew',      'Crew Sleep Period (8.5 hrs)', 'Rest period as Orion passes 150,000 km from Earth.'),
 
 -- ── FD04: Outbound Coast Day 2 ────────────────────────────────────────
-('e037', 'artemis-2', 245700, 4, 'crew',      'Crew Wakeup & Daily Planning', 'Morning health checks and planning conference.'),
+('e037', 'artemis-2', 234000, 4, 'crew',      'Crew Wakeup', 'Crew wakes. Personal time, hygiene, and breakfast.'),
 ('e038', 'artemis-2', 248400, 4, 'science',   'NatGeo Documentary Work', 'National Geographic filming with growing Moon in background.'),
 ('e039', 'artemis-2', 252000, 4, 'communication', 'PAO Broadcast', 'Public affairs event — crew discusses halfway point to the Moon.'),
 ('e040', 'artemis-2', 260100, 4, 'propulsion', 'Outbound Trajectory Correction 2', 'Second mid-course correction burn. Fine-tuning approach to lunar flyby.'),
@@ -89,7 +89,7 @@ INSERT INTO mission_events (id, mission_id, met_seconds, flight_day, category, t
 ('e047', 'artemis-2', 290700, 4, 'crew',      'Crew Sleep Period (8.5 hrs)', 'Sleep shifted 45 minutes earlier to prepare for flyby day schedule.'),
 
 -- ── FD05: Flyby Prep ──────────────────────────────────────────────────
-('e048', 'artemis-2', 328500, 5, 'crew',      'Crew Wakeup & Daily Planning', 'Morning health checks. Moon now dominates the view.'),
+('e048', 'artemis-2', 320400, 5, 'crew',      'Crew Wakeup', 'Crew wakes from shifted sleep schedule. Moon now dominates the view.'),
 ('e049', 'artemis-2', 330300, 5, 'system',    'OCSS Deep Flight Test Ops', 'Orion Crew Survival System deep-space flight test objectives — suit and life support validation.'),
 ('e050', 'artemis-2', 345600, 5, 'system',    'Cabin Depress Operations', 'Controlled cabin depressurization test — validating Orion''s pressure systems.'),
 ('e051', 'artemis-2', 350100, 5, 'science',   'Science Imaging', 'Lunar approach photography — surface details becoming clearly visible.'),
@@ -100,7 +100,7 @@ INSERT INTO mission_events (id, mission_id, met_seconds, flight_day, category, t
 ('e056', 'artemis-2', 373500, 5, 'crew',      'Crew Sleep Period (8.5 hrs)', 'Sleep shifted 1 hour earlier. Crew rests before the most anticipated day of the mission.'),
 
 -- ── FD06: Lunar Flyby ─────────────────────────────────────────────────
-('e057', 'artemis-2', 411300, 6, 'crew',      'Crew Wakeup & Daily Planning', 'Flyby day. Crew wakes to the Moon filling their windows.'),
+('e057', 'artemis-2', 404100, 6, 'crew',      'Crew Wakeup — Flyby Day', 'Crew wakes for the most anticipated day of the mission. Moon fills the windows.'),
 ('e058', 'artemis-2', 413100, 6, 'communication', 'Pre-Flyby Lunar Conference', 'Crew and Houston review flyby timeline, camera assignments, and observation targets.'),
 ('e059', 'artemis-2', 414900, 6, 'communication', 'PAO Broadcast', 'Live public broadcast as Orion approaches closest approach.'),
 ('e060', 'artemis-2', 415800, 6, 'science',   'Final Flyby Briefing', 'Last coordination for lunar observation window.'),
@@ -118,7 +118,7 @@ INSERT INTO mission_events (id, mission_id, met_seconds, flight_day, category, t
 ('e072', 'artemis-2', 459000, 6, 'crew',      'Crew Sleep Period (9.5 hrs)', 'Extended rest after the most intense day of the mission. Sleep shifted 1 hour later.'),
 
 -- ── FD07: Return Coast Day 1 ──────────────────────────────────────────
-('e073', 'artemis-2', 502200, 7, 'crew',      'Crew Wakeup & Daily Planning', 'First morning on the homeward journey. Earth grows larger each hour.'),
+('e073', 'artemis-2', 493200, 7, 'crew',      'Crew Wakeup', 'First morning on the homeward journey. Earth grows larger each hour.'),
 ('e074', 'artemis-2', 504000, 7, 'communication', 'Crew-to-Crew Call', 'Private call with families — sharing the lunar experience.'),
 ('e075', 'artemis-2', 505800, 7, 'science',   'Post-Lunar Debrief', 'Detailed crew debrief on flyby observations, photography, and systems performance.'),
 ('e076', 'artemis-2', 507600, 7, 'crew',      'Off-Duty Period', 'Crew rest and personal time after the intense flyby day.'),
@@ -130,7 +130,7 @@ INSERT INTO mission_events (id, mission_id, met_seconds, flight_day, category, t
 
 -- ── FD08: Return Coast Day 2 ──────────────────────────────────────────
 ('e082', 'artemis-2', 585000, 8, 'system',    'CCU Operations', 'Crew Configuration Umbilical — systems checkout.'),
-('e083', 'artemis-2', 587700, 8, 'crew',      'Crew Wakeup & Daily Planning', 'Morning health checks and planning conference.'),
+('e083', 'artemis-2', 579600, 8, 'crew',      'Crew Wakeup', 'Morning wake. Personal time before scheduled activities.'),
 ('e084', 'artemis-2', 590400, 8, 'crew',      'Exercise Period', 'Extended exercise session with P/TV monitoring.'),
 ('e085', 'artemis-2', 603000, 8, 'communication', 'CSA PAO Event', 'Canadian Space Agency public affairs broadcast with Jeremy Hansen.'),
 ('e086', 'artemis-2', 603900, 8, 'system',    'Cabin Repress Operations', 'Cabin repressurization procedure following earlier depress test.'),
@@ -141,7 +141,7 @@ INSERT INTO mission_events (id, mission_id, met_seconds, flight_day, category, t
 ('e091', 'artemis-2', 635400, 8, 'crew',      'Crew Sleep Period (8.5 hrs)', 'Rest period as Orion passes halfway home.'),
 
 -- ── FD09: Entry Preparation ───────────────────────────────────────────
-('e092', 'artemis-2', 674100, 9, 'crew',      'Crew Wakeup & Daily Planning', 'Morning checks. Earth now clearly visible as a sphere.'),
+('e092', 'artemis-2', 666000, 9, 'crew',      'Crew Wakeup', 'Crew wakes for entry prep day. Earth now clearly visible as a sphere.'),
 ('e093', 'artemis-2', 675900, 9, 'system',    'Deep Flight Test Objectives', 'Final deep-space flight test operations before entry prep begins.'),
 ('e094', 'artemis-2', 682200, 9, 'system',    'Entry Study', 'Crew reviews entry procedures, checklist, and contingency plans.'),
 ('e095', 'artemis-2', 685800, 9, 'system',    'Entry Conference', 'Detailed briefing on reentry timeline, g-loads, and recovery plan.'),
@@ -154,7 +154,8 @@ INSERT INTO mission_events (id, mission_id, met_seconds, flight_day, category, t
 ('e102', 'artemis-2', 721800, 9, 'crew',      'Crew Sleep Period (8.5 hrs)', 'Final sleep period of the mission. Tomorrow is splashdown day.'),
 
 -- ── FD10: Reentry & Splashdown ────────────────────────────────────────
-('e103', 'artemis-2', 760500, 10, 'system',    'Pre-Entry PMC & Cabin Prep', 'Final medical conference and cabin preparation begins.'),
+('e103', 'artemis-2', 752400, 10, 'crew',      'Crew Wakeup — Splashdown Day', 'Final wakeup of the mission. Crew prepares for reentry.'),
+('e103b', 'artemis-2', 760500, 10, 'system',   'Pre-Entry PMC & Cabin Prep', 'Final medical conference and cabin preparation begins.'),
 ('e104', 'artemis-2', 762300, 10, 'propulsion', 'Return Trajectory Correction 3', 'Final trajectory correction — precision targeting for the entry corridor.'),
 ('e105', 'artemis-2', 766800, 10, 'system',    'Cabin Configuration', 'Crew dons launch-and-entry suits. All equipment secured for high-g reentry.'),
 ('e106', 'artemis-2', 772200, 10, 'system',    'Entry Checklist', 'Comprehensive entry checklist — every system verified for atmospheric reentry at ~40,000 km/h.'),

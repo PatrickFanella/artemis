@@ -125,7 +125,7 @@ INSERT INTO mission_events (id, mission_id, met_seconds, flight_day, category, t
 
 -- ========== FD05: Lunar Flyby & Return Begins ==========
 INSERT INTO mission_events (id, mission_id, met_seconds, flight_day, category, title, description) VALUES
-('e073', 'artemis-2', 342000, 5, 'navigation',    'Closest Approach Phase Begins',    'Orion descends toward 130 km above the lunar surface at increasing velocity'),
+('e073', 'artemis-2', 342000, 4, 'navigation',    'Closest Approach Phase Begins',    'Orion descends toward 130 km above the lunar surface at increasing velocity'),
 ('e074', 'artemis-2', 345600, 5, 'navigation',    'Closest Lunar Approach',           'Closest point to the Moon: ~130 km above the far side — crew are the farthest humans from Earth since Apollo'),
 ('e075', 'artemis-2', 345660, 5, 'science',       'Far-Side Observation Window',      'Crew photographs the lunar far side — craters, highlands, and South Pole-Aitken basin visible'),
 ('e076', 'artemis-2', 348000, 5, 'communication', 'Loss of Signal (Far Side)',        'Orion passes behind the Moon — planned communication blackout with Earth'),

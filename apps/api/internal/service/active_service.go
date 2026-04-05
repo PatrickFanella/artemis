@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/onnwee/artemis/apps/api/internal/domain"
@@ -57,7 +59,9 @@ func (s *ActiveService) GetDashboard(ctx context.Context) (*domain.ActiveMission
 		PhaseLabel:           phaseLabel,
 	}
 
-	// Find current section and next milestone
+	// Compute section statuses dynamically from MET
+	computeSectionStatuses(sections, metSeconds)
+
 	var currentSection *domain.MissionSection
 	for i := range sections {
 		if sections[i].Status == "active" {
@@ -270,6 +274,44 @@ func formatMET(totalSeconds int) string {
 	minutes := remaining / 60
 	seconds := remaining % 60
 	return fmt.Sprintf("%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
+}
+
+// computeSectionStatuses sets each section's Status to "completed", "active",
+// or "upcoming" based on the current MET and the section's day range.
+// Exactly one section will be "active" — the highest-order section whose
+// start day has been reached.
+func computeSectionStatuses(sections []domain.MissionSection, metSeconds int) {
+	currentFD := metSeconds/86400 + 1
+	activeIdx := -1
+	for i := range sections {
+		startDay, _ := parseDayRange(sections[i].DayRange)
+		if currentFD >= startDay {
+			activeIdx = i
+		}
+	}
+	for i := range sections {
+		if i < activeIdx {
+			sections[i].Status = "completed"
+		} else if i == activeIdx {
+			sections[i].Status = "active"
+		} else {
+			sections[i].Status = "upcoming"
+		}
+	}
+}
+
+// parseDayRange extracts start and end flight day numbers from strings like
+// "Day 1", "Day 1-2", "Days 2-4", "Day 10".
+func parseDayRange(dayRange string) (int, int) {
+	s := strings.TrimPrefix(dayRange, "Days ")
+	s = strings.TrimPrefix(s, "Day ")
+	parts := strings.SplitN(s, "-", 2)
+	start, _ := strconv.Atoi(strings.TrimSpace(parts[0]))
+	if len(parts) == 2 {
+		end, _ := strconv.Atoi(strings.TrimSpace(parts[1]))
+		return start, end
+	}
+	return start, start
 }
 
 func buildTelemetry(mission *domain.Mission, metSeconds int, earthKm, moonKm, velKmh float64, phase string) domain.TelemetrySnapshot {

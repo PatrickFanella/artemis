@@ -38,16 +38,18 @@ func main() {
 	eventStore := store.NewEventStore(db)
 
 	nasaClient := nasa.NewImagesClient()
+	liveTelemetry := service.NewLiveTelemetry()
 
 	missionSvc := service.NewMissionService(missionStore)
 	updateSvc := service.NewUpdateService(blogStore)
-	activeSvc := service.NewActiveService(missionStore, blogStore, nasaClient, eventStore)
+	activeSvc := service.NewActiveService(missionStore, blogStore, nasaClient, eventStore, liveTelemetry)
 
-	// Start RSS ingestion in background
+	// Start background jobs
 	ingester := jobs.NewRSSIngester(blogStore)
 	scheduler := jobs.NewScheduler(ingester, 15*time.Minute)
 	ctx, stopScheduler := context.WithCancel(context.Background())
 	go scheduler.Start(ctx)
+	go liveTelemetry.StartPoller(ctx, 60*time.Second)
 
 	r := router.New(router.Services{
 		Mission: missionSvc,

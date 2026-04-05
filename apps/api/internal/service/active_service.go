@@ -19,10 +19,11 @@ type ActiveService struct {
 	blogs    *store.BlogUpdateStore
 	media    *nasa.ImagesClient
 	events   *store.EventStore
+	live     *LiveTelemetry
 }
 
-func NewActiveService(m *store.MissionStore, b *store.BlogUpdateStore, media *nasa.ImagesClient, events *store.EventStore) *ActiveService {
-	return &ActiveService{missions: m, blogs: b, media: media, events: events}
+func NewActiveService(m *store.MissionStore, b *store.BlogUpdateStore, media *nasa.ImagesClient, events *store.EventStore, live *LiveTelemetry) *ActiveService {
+	return &ActiveService{missions: m, blogs: b, media: media, events: events, live: live}
 }
 
 func (s *ActiveService) GetDashboard(ctx context.Context) (*domain.ActiveMissionDashboard, error) {
@@ -48,9 +49,18 @@ func (s *ActiveService) GetDashboard(ctx context.Context) (*domain.ActiveMission
 	clock := buildMissionClock(mission)
 	metSeconds := clock.MetSeconds
 
-	// Compute trajectory
-	earthKm, moonKm, velKmh := InterpolateTrajectory(metSeconds)
+	// Compute trajectory — prefer live NASA Horizons data, fall back to interpolation
+	var earthKm, moonKm, velKmh float64
+
+	if lp := s.live.Get(); lp != nil {
+		earthKm = lp.EarthDistanceKm
+		moonKm = lp.MoonDistanceKm
+		velKmh = lp.VelocityKmh
+	} else {
+		earthKm, moonKm, velKmh = InterpolateTrajectory(metSeconds)
+	}
 	phase, phaseLabel := PhaseFromMET(metSeconds)
+
 	trajectory := domain.Trajectory{
 		DistanceFromEarthKm: math.Round(earthKm*10) / 10,
 		DistanceFromMoonKm:  math.Round(moonKm*10) / 10,
@@ -180,7 +190,14 @@ func (s *ActiveService) GetTelemetry(ctx context.Context) (*domain.TelemetrySnap
 		return nil, nil
 	}
 	metSeconds := computeMETSeconds(mission)
-	earthKm, moonKm, velKmh := InterpolateTrajectory(metSeconds)
+	var earthKm, moonKm, velKmh float64
+	if lp := s.live.Get(); lp != nil {
+		earthKm = lp.EarthDistanceKm
+		moonKm = lp.MoonDistanceKm
+		velKmh = lp.VelocityKmh
+	} else {
+		earthKm, moonKm, velKmh = InterpolateTrajectory(metSeconds)
+	}
 	phase, _ := PhaseFromMET(metSeconds)
 	t := buildTelemetry(mission, metSeconds, earthKm, moonKm, velKmh, phase)
 	return &t, nil

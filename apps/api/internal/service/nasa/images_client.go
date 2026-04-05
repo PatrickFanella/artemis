@@ -6,20 +6,32 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"sync"
 	"time"
 
 	"github.com/onnwee/artemis/apps/api/internal/domain"
+	"github.com/rs/zerolog/log"
 )
 
 const baseURL = "https://images-api.nasa.gov"
 
+type cacheEntry struct {
+	result    *domain.MediaSearchResult
+	fetchedAt time.Time
+}
+
 type ImagesClient struct {
-	client *http.Client
+	client   *http.Client
+	mu       sync.RWMutex
+	cache    map[string]cacheEntry
+	cacheTTL time.Duration
 }
 
 func NewImagesClient() *ImagesClient {
 	return &ImagesClient{
-		client: &http.Client{Timeout: 15 * time.Second},
+		client:   &http.Client{Timeout: 15 * time.Second},
+		cache:    make(map[string]cacheEntry),
+		cacheTTL: 30 * time.Minute,
 	}
 }
 
@@ -64,6 +76,16 @@ func (c *ImagesClient) Search(ctx context.Context, query, mediaType string, year
 		params.Set("page", fmt.Sprintf("%d", page))
 	}
 
+	cacheKey := params.Encode()
+
+	// Check cache
+	c.mu.RLock()
+	if entry, ok := c.cache[cacheKey]; ok && time.Since(entry.fetchedAt) < c.cacheTTL {
+		c.mu.RUnlock()
+		return entry.result, nil
+	}
+	c.mu.RUnlock()
+
 	reqURL := fmt.Sprintf("%s/search?%s", baseURL, params.Encode())
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, reqURL, nil)
 	if err != nil {
@@ -75,6 +97,18 @@ func (c *ImagesClient) Search(ctx context.Context, query, mediaType string, year
 		return nil, fmt.Errorf("fetch NASA images: %w", err)
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusTooManyRequests {
+		log.Warn().Msg("NASA Images API rate limited (429)")
+		// Return stale cache if available
+		c.mu.RLock()
+		if entry, ok := c.cache[cacheKey]; ok {
+			c.mu.RUnlock()
+			return entry.result, nil
+		}
+		c.mu.RUnlock()
+		return nil, fmt.Errorf("NASA images API rate limited")
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("NASA images API returned %d", resp.StatusCode)
@@ -124,6 +158,11 @@ func (c *ImagesClient) Search(ctx context.Context, query, mediaType string, year
 	if result.Items == nil {
 		result.Items = []domain.MediaAsset{}
 	}
+
+	// Cache result
+	c.mu.Lock()
+	c.cache[cacheKey] = cacheEntry{result: result, fetchedAt: time.Now()}
+	c.mu.Unlock()
 
 	return result, nil
 }

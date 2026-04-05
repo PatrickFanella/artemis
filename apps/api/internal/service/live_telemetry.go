@@ -61,6 +61,9 @@ func (lt *LiveTelemetry) Poll(ctx context.Context) {
 		return
 	}
 
+	// Brief pause between requests to be polite to NASA's API
+	time.Sleep(500 * time.Millisecond)
+
 	// Fetch Moon position relative to Earth (for accurate Moon distance)
 	moonX, moonY, moonZ, _, _, _, err := lt.fetchVector(ctx, "301", timeStr, endStr)
 	if err != nil {
@@ -120,6 +123,9 @@ func (lt *LiveTelemetry) fetchVector(ctx context.Context, command, startTime, st
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode == http.StatusTooManyRequests {
+		return 0, 0, 0, 0, 0, 0, fmt.Errorf("rate limited (429)")
+	}
 	if resp.StatusCode != http.StatusOK {
 		return 0, 0, 0, 0, 0, 0, fmt.Errorf("status %d", resp.StatusCode)
 	}
@@ -162,11 +168,13 @@ func parseHorizonsVectors(raw string) (x, y, z, vx, vy, vz float64, err error) {
 }
 
 // StartPoller runs Poll on the given interval until ctx is cancelled.
+// Backs off on consecutive errors to avoid hammering NASA's API.
 func (lt *LiveTelemetry) StartPoller(ctx context.Context, interval time.Duration) {
 	log.Info().Str("interval", interval.String()).Msg("starting live telemetry poller (NASA Horizons)")
 
 	lt.Poll(ctx)
 
+	consecutiveErrors := 0
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 
@@ -176,7 +184,31 @@ func (lt *LiveTelemetry) StartPoller(ctx context.Context, interval time.Duration
 			log.Info().Msg("live telemetry poller stopped")
 			return
 		case <-ticker.C:
+			// Exponential backoff: skip ticks on consecutive errors
+			// 1 error = skip 1 (wait 2min), 2 = skip 3 (4min), 3 = skip 7 (8min), max 15 (16min)
+			if consecutiveErrors > 0 {
+				skipCount := min((1<<consecutiveErrors)-1, 15)
+				for i := 0; i < skipCount; i++ {
+					select {
+					case <-ctx.Done():
+						return
+					case <-ticker.C:
+					}
+				}
+			}
+
 			lt.Poll(ctx)
+
+			lt.mu.RLock()
+			hasData := lt.current != nil && time.Since(lt.current.FetchedAt) < 5*time.Minute
+			lt.mu.RUnlock()
+
+			if hasData {
+				consecutiveErrors = 0
+			} else {
+				consecutiveErrors = min(consecutiveErrors+1, 4)
+				log.Warn().Int("consecutive_errors", consecutiveErrors).Msg("live telemetry: backing off")
+			}
 		}
 	}
 }

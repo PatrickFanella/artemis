@@ -45,9 +45,13 @@ func NewRSSIngester(s *store.BlogUpdateStore) *RSSIngester {
 }
 
 func (r *RSSIngester) Run(ctx context.Context) {
-	for _, fc := range r.feeds {
+	for i, fc := range r.feeds {
 		if err := r.ingestFeed(ctx, fc); err != nil {
 			log.Error().Err(err).Str("source", fc.Source).Msg("failed to ingest feed")
+		}
+		// Pause between feeds to respect NASA rate limits
+		if i < len(r.feeds)-1 {
+			time.Sleep(2 * time.Second)
 		}
 	}
 }

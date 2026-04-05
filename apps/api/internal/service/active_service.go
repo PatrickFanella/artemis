@@ -70,6 +70,15 @@ func (s *ActiveService) GetDashboard(ctx context.Context) (*domain.ActiveMission
 		}
 	}
 
+	// Mark milestones as completed if their planned time has passed
+	now := time.Now()
+	for i := range milestones {
+		if milestones[i].CompletedAt == nil && milestones[i].PlannedAt != nil && now.After(*milestones[i].PlannedAt) {
+			t := *milestones[i].PlannedAt
+			milestones[i].CompletedAt = &t
+		}
+	}
+
 	var nextMilestone *domain.Milestone
 	for i := range milestones {
 		if milestones[i].CompletedAt == nil {

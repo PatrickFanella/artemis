@@ -87,6 +87,7 @@ export interface MissionEvent {
   id: string;
   mission_id: string;
   met_seconds: number;
+  duration_seconds?: number;
   flight_day: number;
   category: "propulsion" | "navigation" | "crew" | "communication" | "system" | "science";
   title: string;

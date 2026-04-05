@@ -110,10 +110,12 @@ function EventRow({
           </span>
           <span className="met-display text-xs text-lunar-white/40">
             {formatMET(event.met_seconds)}
+            {event.duration_seconds ? ` → ${formatMET(event.met_seconds + event.duration_seconds)}` : ""}
           </span>
           {launchDate && (
             <span className="text-xs text-artemis-cyan/60">
               {formatLocalTime(launchDate, event.met_seconds)}
+              {event.duration_seconds ? ` – ${formatLocalTime(launchDate, event.met_seconds + event.duration_seconds)}` : ""}
             </span>
           )}
           {!compact && (

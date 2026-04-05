@@ -90,14 +90,15 @@ type TelemetrySnapshot struct {
 
 // MissionEvent represents a single scheduled activity in the mission timeline
 type MissionEvent struct {
-	ID          string `json:"id"`
-	MissionID   string `json:"mission_id"`
-	MetSeconds  int    `json:"met_seconds"`
-	FlightDay   int    `json:"flight_day"`
-	Category    string `json:"category"` // propulsion, navigation, crew, communication, system, science
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Status      string `json:"status"` // completed, active, upcoming (computed)
+	ID              string `json:"id"`
+	MissionID       string `json:"mission_id"`
+	MetSeconds      int    `json:"met_seconds"`
+	DurationSeconds int    `json:"duration_seconds,omitempty"`
+	FlightDay       int    `json:"flight_day"`
+	Category        string `json:"category"` // propulsion, navigation, crew, communication, system, science
+	Title           string `json:"title"`
+	Description     string `json:"description"`
+	Status          string `json:"status"` // completed, active, upcoming (computed)
 }
 
 // MissionClock represents the live mission timer

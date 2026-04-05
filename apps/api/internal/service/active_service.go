@@ -227,19 +227,32 @@ func (s *ActiveService) GetEvents(ctx context.Context, flightDay int) (*domain.E
 		events = []domain.MissionEvent{}
 	}
 
-	// Set status based on current MET
+	// Set status based on current MET, respecting event duration
 	for i := range events {
-		if events[i].MetSeconds <= metSeconds {
+		endMet := events[i].MetSeconds + events[i].DurationSeconds
+		if events[i].DurationSeconds > 0 && metSeconds >= events[i].MetSeconds && metSeconds < endMet {
+			// Currently within a duration event (e.g. crew is sleeping)
+			events[i].Status = "active"
+		} else if events[i].MetSeconds <= metSeconds {
 			events[i].Status = "completed"
 		} else {
 			events[i].Status = "upcoming"
 		}
 	}
-	// Mark the most recent past event as active
-	for i := len(events) - 1; i >= 0; i-- {
-		if events[i].Status == "completed" {
-			events[i].Status = "active"
+	// If no duration event is active, mark the most recent past event as active
+	hasActive := false
+	for _, e := range events {
+		if e.Status == "active" {
+			hasActive = true
 			break
+		}
+	}
+	if !hasActive {
+		for i := len(events) - 1; i >= 0; i-- {
+			if events[i].Status == "completed" {
+				events[i].Status = "active"
+				break
+			}
 		}
 	}
 

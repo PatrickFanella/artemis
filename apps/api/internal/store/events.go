@@ -17,7 +17,7 @@ func NewEventStore(db *DB) *EventStore {
 
 func (s *EventStore) List(ctx context.Context, missionID string) ([]domain.MissionEvent, error) {
 	rows, err := s.db.QueryContext(ctx,
-		`SELECT id, mission_id, met_seconds, flight_day, category, title, description
+		`SELECT id, mission_id, met_seconds, duration_seconds, flight_day, category, title, description
 		 FROM mission_events WHERE mission_id = ? ORDER BY met_seconds`, missionID)
 	if err != nil {
 		return nil, fmt.Errorf("list events: %w", err)
@@ -27,7 +27,7 @@ func (s *EventStore) List(ctx context.Context, missionID string) ([]domain.Missi
 	var events []domain.MissionEvent
 	for rows.Next() {
 		var e domain.MissionEvent
-		if err := rows.Scan(&e.ID, &e.MissionID, &e.MetSeconds, &e.FlightDay, &e.Category, &e.Title, &e.Description); err != nil {
+		if err := rows.Scan(&e.ID, &e.MissionID, &e.MetSeconds, &e.DurationSeconds, &e.FlightDay, &e.Category, &e.Title, &e.Description); err != nil {
 			return nil, fmt.Errorf("scan event: %w", err)
 		}
 		events = append(events, e)
@@ -37,7 +37,7 @@ func (s *EventStore) List(ctx context.Context, missionID string) ([]domain.Missi
 
 func (s *EventStore) ByFlightDay(ctx context.Context, missionID string, fd int) ([]domain.MissionEvent, error) {
 	rows, err := s.db.QueryContext(ctx,
-		`SELECT id, mission_id, met_seconds, flight_day, category, title, description
+		`SELECT id, mission_id, met_seconds, duration_seconds, flight_day, category, title, description
 		 FROM mission_events WHERE mission_id = ? AND flight_day = ? ORDER BY met_seconds`, missionID, fd)
 	if err != nil {
 		return nil, fmt.Errorf("events by flight day: %w", err)
@@ -47,7 +47,7 @@ func (s *EventStore) ByFlightDay(ctx context.Context, missionID string, fd int) 
 	var events []domain.MissionEvent
 	for rows.Next() {
 		var e domain.MissionEvent
-		if err := rows.Scan(&e.ID, &e.MissionID, &e.MetSeconds, &e.FlightDay, &e.Category, &e.Title, &e.Description); err != nil {
+		if err := rows.Scan(&e.ID, &e.MissionID, &e.MetSeconds, &e.DurationSeconds, &e.FlightDay, &e.Category, &e.Title, &e.Description); err != nil {
 			return nil, fmt.Errorf("scan event: %w", err)
 		}
 		events = append(events, e)
@@ -58,7 +58,7 @@ func (s *EventStore) ByFlightDay(ctx context.Context, missionID string, fd int) 
 // Recent returns the N most recent events before the given MET
 func (s *EventStore) Recent(ctx context.Context, missionID string, metSeconds int, limit int) ([]domain.MissionEvent, error) {
 	rows, err := s.db.QueryContext(ctx,
-		`SELECT id, mission_id, met_seconds, flight_day, category, title, description
+		`SELECT id, mission_id, met_seconds, duration_seconds, flight_day, category, title, description
 		 FROM mission_events WHERE mission_id = ? AND met_seconds <= ?
 		 ORDER BY met_seconds DESC LIMIT ?`, missionID, metSeconds, limit)
 	if err != nil {
@@ -69,7 +69,7 @@ func (s *EventStore) Recent(ctx context.Context, missionID string, metSeconds in
 	var events []domain.MissionEvent
 	for rows.Next() {
 		var e domain.MissionEvent
-		if err := rows.Scan(&e.ID, &e.MissionID, &e.MetSeconds, &e.FlightDay, &e.Category, &e.Title, &e.Description); err != nil {
+		if err := rows.Scan(&e.ID, &e.MissionID, &e.MetSeconds, &e.DurationSeconds, &e.FlightDay, &e.Category, &e.Title, &e.Description); err != nil {
 			return nil, fmt.Errorf("scan event: %w", err)
 		}
 		e.Status = "completed"
@@ -81,7 +81,7 @@ func (s *EventStore) Recent(ctx context.Context, missionID string, metSeconds in
 // Upcoming returns the next N events after the given MET
 func (s *EventStore) Upcoming(ctx context.Context, missionID string, metSeconds int, limit int) ([]domain.MissionEvent, error) {
 	rows, err := s.db.QueryContext(ctx,
-		`SELECT id, mission_id, met_seconds, flight_day, category, title, description
+		`SELECT id, mission_id, met_seconds, duration_seconds, flight_day, category, title, description
 		 FROM mission_events WHERE mission_id = ? AND met_seconds > ?
 		 ORDER BY met_seconds ASC LIMIT ?`, missionID, metSeconds, limit)
 	if err != nil {
@@ -92,7 +92,7 @@ func (s *EventStore) Upcoming(ctx context.Context, missionID string, metSeconds 
 	var events []domain.MissionEvent
 	for rows.Next() {
 		var e domain.MissionEvent
-		if err := rows.Scan(&e.ID, &e.MissionID, &e.MetSeconds, &e.FlightDay, &e.Category, &e.Title, &e.Description); err != nil {
+		if err := rows.Scan(&e.ID, &e.MissionID, &e.MetSeconds, &e.DurationSeconds, &e.FlightDay, &e.Category, &e.Title, &e.Description); err != nil {
 			return nil, fmt.Errorf("scan event: %w", err)
 		}
 		e.Status = "upcoming"

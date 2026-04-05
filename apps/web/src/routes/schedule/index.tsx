@@ -13,18 +13,19 @@ import {
 import { getActiveEvents } from "@/api/active";
 import type { MissionEvent } from "@/lib/types";
 
-const FLIGHT_DAYS = Array.from({ length: 9 }, (_, i) => i + 1);
+const FLIGHT_DAYS = Array.from({ length: 10 }, (_, i) => i + 1);
 
 const FD_LABELS: Record<number, string> = {
   1: "Launch & Prox Ops",
-  2: "TLI & Outbound",
+  2: "Trans-Lunar Injection",
   3: "Outbound Coast",
-  4: "Approaching Moon",
-  5: "Lunar Flyby",
-  6: "Return Coast",
-  7: "Homeward Bound",
-  8: "Entry Prep",
-  9: "Reentry & Splashdown",
+  4: "Outbound Coast",
+  5: "Flyby Prep",
+  6: "Lunar Flyby",
+  7: "Return Coast",
+  8: "Return Coast",
+  9: "Entry Prep",
+  10: "Reentry & Splashdown",
 };
 
 function computeCurrentMET(launchDate: string | null): number {
@@ -74,7 +75,7 @@ export function SchedulePage() {
     if (mission?.launch_date && selectedFD === null) {
       const met = computeCurrentMET(mission.launch_date);
       const fd = Math.floor(met / 86400) + 1;
-      setSelectedFD(Math.min(fd, 9));
+      setSelectedFD(Math.min(fd, 10));
     }
   }, [mission?.launch_date, selectedFD]);
 

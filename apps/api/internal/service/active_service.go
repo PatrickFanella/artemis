@@ -259,8 +259,8 @@ func buildMissionClock(mission *domain.Mission) domain.MissionClock {
 	clock.FlightDayLabel = fmt.Sprintf("FD%02d", clock.FlightDay)
 	clock.FlightDaySeconds = totalSeconds % 86400
 
-	// Mission progress (0 to 1, based on ~9 day mission = ~718200 seconds to splashdown)
-	missionDurationSeconds := 718200.0
+	// Mission progress (0 to 1, based on ~9.1 day mission = 783900 seconds to splashdown)
+	missionDurationSeconds := 783900.0
 	clock.MissionProgress = math.Min(float64(totalSeconds)/missionDurationSeconds, 1.0)
 
 	return clock

@@ -105,14 +105,14 @@ export function MissionClockDisplay({ clock }: { clock: MissionClock }) {
         </div>
         <div className="bg-space-black/40 backdrop-blur-sm rounded-lg p-3 text-center border border-white/[0.04]">
           <p className="text-2xl font-display font-bold text-artemis-cyan">
-            {Math.min(Math.round((met.totalSeconds / 718200) * 100), 100)}%
+            {Math.min(Math.round((met.totalSeconds / 783900) * 100), 100)}%
           </p>
           <p className="text-xs text-lunar-white/40 mt-1">Mission Progress</p>
           <div className="mt-2 h-1.5 bg-space-gray/50 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-artemis-blue via-artemis-cyan to-artemis-gold rounded-full transition-all duration-1000"
               style={{
-                width: `${Math.min((met.totalSeconds / 718200) * 100, 100)}%`,
+                width: `${Math.min((met.totalSeconds / 783900) * 100, 100)}%`,
               }}
             />
           </div>

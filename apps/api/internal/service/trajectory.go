@@ -12,72 +12,81 @@ type TrajectoryWaypoint struct {
 
 // Artemis II free-return trajectory waypoints
 // Earth-Moon distance ~384,400 km
+// Based on NASA Artemis II Overview Timeline (launch 2026-04-01T22:35Z)
+// Closest approach at ~MET 04/20:38 (421080s)
 var artemis2Waypoints = []TrajectoryWaypoint{
-	// FD01: Launch & Orbit
-	{0, 0, 384400, 0},              // Liftoff (on pad)
+	// FD01: Launch & Orbit (MET 00/00:00 - 00/17:00)
+	{0, 0, 384400, 0},              // Liftoff
 	{60, 15, 384385, 4000},          // Max-Q ascent
 	{510, 185, 384215, 28000},       // Orbit insertion
-	{7200, 185, 384215, 27800},      // In orbit (T+2h)
-	{14400, 200, 384200, 27800},     // Prox ops (T+4h)
-	{72000, 250, 384150, 27700},     // Prox ops complete (T+20h)
-	{79200, 250, 384150, 27700},     // Pre-TLI (T+22h)
-	{80400, 3000, 381400, 38600},    // TLI complete (T+22.3h)
+	{5400, 185, 384215, 27800},      // ARB (T+1.5h)
+	{11700, 200, 384200, 27800},     // Prox ops demo (T+3.25h)
+	{17100, 200, 384200, 27800},     // USS-2 (T+4.75h)
+	{54000, 220, 384180, 27700},     // Pre-TLI sleep ends (T+15h)
 
-	// FD01-02: Early outbound coast
-	{86400, 12000, 372400, 14000},   // T+24h
-	{108000, 42000, 342400, 8000},   // T+30h
-	{129600, 67000, 317400, 6200},   // T+36h
+	// FD02: TLI (MET 00/21:00 - 01/17:00)
+	{75600, 250, 384150, 27700},     // FD02 wakeup (T+21h)
+	{86400, 3000, 381400, 38600},    // TLI burn (T+24h)
+	{90000, 8000, 376400, 18000},    // Post-TLI (T+25h)
+	{104400, 32000, 352400, 10000},  // Window inspect (T+29h)
+	{118800, 52000, 332400, 7500},   // FD02 sleep (T+33h)
 
-	// FD02-03: Outbound coast
-	{151200, 95000, 289400, 5000},   // T+42h (OCC-1)
-	{172800, 118000, 266400, 4400},  // T+48h
-	{194400, 140000, 244400, 4000},  // T+54h
-	{216000, 158000, 226400, 3700},  // T+60h
+	// FD03: Outbound Coast (MET 01/20:45 - 02/17:00)
+	{161100, 88000, 296400, 5400},   // FD03 wakeup (T+44.75h)
+	{169200, 96000, 288400, 5000},   // OTC-1 burn (T+47h)
+	{194400, 120000, 264400, 4200},  // FD03 activities (T+54h)
+	{205200, 132000, 252400, 3900},  // FD03 sleep (T+57h)
 
-	// FD03-04: Approaching Moon
-	{237600, 175000, 209400, 3400},  // T+66h
-	{259200, 193000, 191400, 3200},  // T+72h
-	{280800, 215000, 169400, 3000},  // T+78h
-	{302400, 250000, 134400, 2800},  // T+84h (Lunar SOI entry)
-	{316800, 285000, 99400, 3000},   // T+88h
-	{324000, 310000, 74400, 3300},   // T+90h
-	{331200, 335000, 49400, 3800},   // T+92h
-	{338400, 358000, 26400, 4800},   // T+94h
-	{342000, 370000, 14400, 6000},   // T+95h
-	{344400, 380000, 4400, 7200},    // T+95.7h
-	{345000, 383000, 1400, 7800},    // T+95.8h
+	// FD04: Outbound Coast (MET 02/20:15 - 03/17:00)
+	{245700, 160000, 224400, 3500},  // FD04 wakeup (T+68.25h)
+	{260100, 175000, 209400, 3300},  // OTC-2 burn (T+72.25h)
+	{280800, 195000, 189400, 3100},  // Science imaging (T+78h)
+	{290700, 205000, 179400, 3000},  // FD04 sleep (T+80.75h)
 
-	// FD05: Closest approach & departure
-	{345600, 384270, 130, 8200},     // T+96h — CLOSEST APPROACH
-	{346200, 383000, 1400, 7800},    // T+96.2h
-	{348000, 375000, 9400, 6500},    // T+96.7h
-	{352800, 355000, 29400, 4800},   // T+98h
-	{360000, 325000, 59400, 3800},   // T+100h
-	{374400, 280000, 104400, 3200},  // T+104h
+	// FD05: Flyby Prep (MET 03/19:15 - 04/16:15)
+	{328500, 240000, 144400, 2800},  // FD05 wakeup (T+91.25h)
+	{345600, 260000, 124400, 2700},  // Depress ops (T+96h)
+	{359100, 280000, 104400, 2700},  // OTC-3 burn (T+99.75h)
+	{373500, 305000, 79400, 2800},   // FD05 sleep (T+103.75h)
 
-	// FD06: Return coast
-	{388800, 245000, 139400, 2900},  // T+108h
-	{410400, 210000, 174400, 2800},  // T+114h
-	{432000, 180000, 204400, 2900},  // T+120h
+	// FD06: Lunar Flyby (MET 04/18:15 - 05/17:00)
+	{411300, 350000, 34400, 3500},   // FD06 wakeup (T+114.25h)
+	{413100, 355000, 29400, 3800},   // Lunar conference (T+114.75h)
+	{417600, 365000, 19400, 4800},   // Obs window opens (T+116h)
+	{419400, 375000, 9400, 6200},    // Approaching (T+116.5h)
+	{420600, 381000, 3400, 7200},    // Close approach phase (T+116.8h)
+	{421080, 384270, 130, 8200},     // CLOSEST APPROACH (~130 km)
+	{421800, 381000, 3400, 7200},    // Departing (T+117.2h)
+	{423000, 375000, 9400, 6500},    // LOS far side (T+117.5h)
+	{425400, 365000, 19400, 5200},   // AOS (T+118.2h)
+	{428400, 350000, 34400, 4200},   // Earthrise photo (T+119h)
+	{434700, 330000, 54400, 3500},   // Obs window closes (T+120.75h)
+	{459000, 280000, 104400, 3000},  // FD06 sleep (T+127.5h)
 
-	// FD07: Return coast continues
-	{475200, 138000, 246400, 3300},  // T+132h
-	{518400, 102000, 282400, 3800},  // T+144h
+	// FD07: Return Coast (MET 05/19:30 - 06/17:00)
+	{502200, 235000, 149400, 2800},  // FD07 wakeup (T+139.5h)
+	{521100, 210000, 174400, 2800},  // RTC-1 burn (T+144.75h)
+	{549000, 178000, 206400, 2900},  // FD07 sleep (T+152.5h)
 
-	// FD08: Heading home
-	{561600, 72000, 312400, 4800},   // T+156h
-	{604800, 46000, 338400, 6200},   // T+168h
-	{648000, 28000, 356400, 8500},   // T+180h
+	// FD08: Return Coast (MET 06/18:30 - 07/17:00)
+	{585000, 142000, 242400, 3200},  // FD08 wakeup (T+162.5h)
+	{620100, 105000, 279400, 3800},  // Manual pilot (T+172.25h)
+	{635400, 88000, 296400, 4200},   // FD08 sleep (T+176.5h)
 
-	// FD09: Approach & reentry
-	{691200, 14000, 370400, 12000},  // T+192h
-	{698400, 10000, 374400, 14000},  // T+194h
-	{706000, 5000, 379400, 20000},   // T+196h
-	{712800, 400, 384000, 38000},    // Entry interface
-	{713400, 200, 384200, 40000},    // Peak heating
-	{717000, 8, 384392, 300},        // Main chutes
-	{718200, 0, 384400, 30},         // Splashdown
-	{720000, 0, 384400, 0},          // Recovery
+	// FD09: Entry Prep (MET 07/19:15 - 08/17:00)
+	{674100, 55000, 329400, 5400},   // FD09 wakeup (T+187.25h)
+	{704700, 28000, 356400, 7500},   // RTC-2 burn (T+195.75h)
+	{721800, 16000, 368400, 9500},   // FD09 sleep (T+200.5h)
+
+	// FD10: Reentry & Splashdown (MET 08/19:15 - 09/04:00)
+	{760500, 4000, 380400, 16000},   // FD10 wakeup (T+211.25h)
+	{762300, 3200, 381200, 18000},   // RTC-3 burn (T+211.75h)
+	{772200, 800, 383600, 28000},    // Entry checklist (T+214.5h)
+	{780000, 400, 384000, 36000},    // SM separation (T+216.7h)
+	{781200, 200, 384200, 40000},    // Entry interface (T+217h)
+	{783000, 8, 384392, 300},        // Main chutes
+	{783900, 0, 384400, 30},         // Splashdown
+	{792000, 0, 384400, 0},          // Recovery
 }
 
 // InterpolateTrajectory computes spacecraft position at a given MET
@@ -119,33 +128,33 @@ func lerp(a, b, t float64) float64 {
 // PhaseFromMET determines the mission phase name from elapsed time
 func PhaseFromMET(metSeconds int) (phase, label string) {
 	switch {
-	case metSeconds < 570:
+	case metSeconds < 510:
 		return "ascent", "Ascent"
-	case metSeconds < 7200:
+	case metSeconds < 5400:
 		return "orbit_insertion", "Earth Orbit"
-	case metSeconds < 72000:
+	case metSeconds < 17100:
 		return "proximity_ops", "Proximity Operations"
-	case metSeconds < 79200:
+	case metSeconds < 75600:
 		return "pre_tli", "Pre-TLI"
-	case metSeconds < 81000:
+	case metSeconds < 90000:
 		return "tli_burn", "Trans-Lunar Injection"
-	case metSeconds < 302400:
+	case metSeconds < 411300:
 		return "outbound_coast", "Outbound Coast"
-	case metSeconds < 345000:
+	case metSeconds < 420600:
 		return "lunar_approach", "Lunar Approach"
-	case metSeconds < 346200:
+	case metSeconds < 421800:
 		return "closest_approach", "Lunar Closest Approach"
-	case metSeconds < 360000:
+	case metSeconds < 434700:
 		return "lunar_departure", "Lunar Departure"
-	case metSeconds < 706000:
+	case metSeconds < 772200:
 		return "return_coast", "Return Coast"
-	case metSeconds < 712800:
+	case metSeconds < 781200:
 		return "entry_prep", "Entry Preparation"
-	case metSeconds < 717000:
+	case metSeconds < 783000:
 		return "reentry", "Atmospheric Reentry"
-	case metSeconds < 718200:
+	case metSeconds < 783900:
 		return "descent", "Parachute Descent"
-	case metSeconds < 720000:
+	case metSeconds < 792000:
 		return "splashdown", "Splashdown"
 	default:
 		return "recovery", "Recovery"
@@ -153,13 +162,10 @@ func PhaseFromMET(metSeconds int) (phase, label string) {
 }
 
 // TrajectoryWaypointsForViz returns simplified waypoints for frontend visualization
-// Returns ~20 points along the trajectory for the SVG path
 func TrajectoryWaypointsForViz() []TrajectoryVizPoint {
-	// Normalized 0-1 for Earth distance (where 1 = at Moon)
 	points := make([]TrajectoryVizPoint, 0, 25)
 	maxDist := 384400.0
 	for _, wp := range artemis2Waypoints {
-		// Only include select waypoints for visualization
 		norm := wp.EarthDistanceKm / maxDist
 		points = append(points, TrajectoryVizPoint{
 			MetSeconds: wp.MetSeconds,

@@ -54,9 +54,9 @@ var artemis2Waypoints = []TrajectoryWaypoint{
 	{413100, 355000, 29400, 3800},   // Lunar conference (T+114.75h)
 	{417600, 365000, 19400, 4800},   // Obs window opens (T+116h)
 	{419400, 375000, 9400, 6200},    // Approaching (T+116.5h)
-	{420600, 381000, 3400, 7200},    // Close approach phase (T+116.8h)
-	{421080, 384270, 130, 8200},     // CLOSEST APPROACH (~130 km)
-	{421800, 381000, 3400, 7200},    // Departing (T+117.2h)
+	{420600, 393000, 10600, 3200},   // Close approach phase (T+116.8h)
+	{421080, 395100, 8900, 2900},    // CLOSEST APPROACH (~8,900 km from surface)
+	{421800, 393000, 10600, 3200},   // Departing (T+117.2h)
 	{423000, 375000, 9400, 6500},    // LOS far side (T+117.5h)
 	{425400, 365000, 19400, 5200},   // AOS (T+118.2h)
 	{428400, 350000, 34400, 4200},   // Earthrise photo (T+119h)
@@ -128,7 +128,7 @@ func lerp(a, b, t float64) float64 {
 // PhaseFromMET determines the mission phase name from elapsed time
 func PhaseFromMET(metSeconds int) (phase, label string) {
 	switch {
-	case metSeconds < 510:
+	case metSeconds < 485:
 		return "ascent", "Ascent"
 	case metSeconds < 5400:
 		return "orbit_insertion", "Earth Orbit"

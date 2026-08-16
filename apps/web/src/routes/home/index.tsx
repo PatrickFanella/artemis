@@ -6,7 +6,7 @@ import { useQuery } from "@/hooks/useQuery";
 import { SSR_KEYS } from "@/lib/ssrKeys";
 import { getMissions } from "@/api/missions";
 import { getLatestUpdates } from "@/api/updates";
-import { searchMedia } from "@/api/media";
+import { searchMedia, getApod } from "@/api/media";
 import type { Mission } from "@/lib/types";
 
 function latestCompleted(missions: Mission[] | null): Mission | undefined {
@@ -27,6 +27,7 @@ export function HomePage() {
   const { data: missions, loading: mLoading } = useQuery(getMissions, [], SSR_KEYS.missions);
   const { data: updates } = useQuery(getLatestUpdates, [], SSR_KEYS.latestUpdates);
   const { data: media } = useQuery(() => searchMedia("artemis ii", "image"), [], SSR_KEYS.homeMedia);
+  const { data: apod } = useQuery(getApod);
 
   const completed = latestCompleted(missions);
   const next = nextUpcoming(missions);
@@ -96,9 +97,32 @@ export function HomePage() {
         </section>
       )}
 
+      {/* Astronomy Picture of the Day */}
+      {apod && (
+        <section className="panel overflow-hidden">
+          <div className="grid md:grid-cols-2">
+            <a href={apod.hdurl || apod.url} target="_blank" rel="noopener noreferrer" className="block aspect-video md:aspect-auto bg-space-slate/30">
+              {apod.media_type === "image" ? (
+                <img src={apod.url} alt={apod.title} className="w-full h-full object-cover" loading="lazy" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-faint">Video: {apod.title}</div>
+              )}
+            </a>
+            <div className="p-6 flex flex-col">
+              <span className="label text-artemis-cyan">Astronomy Picture of the Day</span>
+              <h2 className="text-xl font-display font-semibold tracking-tight mt-2 mb-2">{apod.title}</h2>
+              <p className="text-muted text-sm leading-relaxed line-clamp-6">{apod.explanation}</p>
+              <div className="mt-auto pt-4 flex items-center justify-between text-xs text-faint">
+                <span>{new Date(apod.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
+                {apod.copyright && <span>© {apod.copyright}</span>}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* --- Updates + Media (two-column on desktop) --- */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Latest updates */}
         {updates && updates.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
@@ -109,18 +133,16 @@ export function HomePage() {
             </div>
             <div className="space-y-2">
               {updates.slice(0, 4).map((update) => (
-                <a
+                <Link
                   key={update.id}
-                  href={update.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  to={`/updates/${update.id}`}
                   className="block panel panel-hover p-4"
                 >
                   <h3 className="font-medium text-sm leading-snug">{update.title}</h3>
                   {update.summary && (
                     <p className="text-muted text-sm mt-1 line-clamp-2">{update.summary}</p>
                   )}
-                </a>
+                </Link>
               ))}
             </div>
           </section>

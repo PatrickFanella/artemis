@@ -10,6 +10,7 @@ import { getUpdates } from "@/api/updates";
 
 const sources = [
   { key: "", label: "All" },
+  { key: "article", label: "Articles" },
   { key: "artemis_blog", label: "Artemis Blog" },
   { key: "nasa_news", label: "NASA News" },
   { key: "iotd", label: "Image of the Day" },

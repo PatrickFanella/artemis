@@ -54,6 +54,7 @@ type BlogUpdate struct {
 	URL         string    `json:"url"`
 	Author      string    `json:"author"`
 	Summary     string    `json:"summary"`
+	Content     string    `json:"content,omitempty"`
 	ImageURL    string    `json:"image_url,omitempty"`
 	PublishedAt time.Time `json:"published_at"`
 	CreatedAt   time.Time `json:"created_at"`

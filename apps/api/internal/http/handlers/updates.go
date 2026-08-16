@@ -59,3 +59,18 @@ func (h *UpdateHandler) ByMission(w http.ResponseWriter, r *http.Request) {
 	}
 	writeJSON(w, http.StatusOK, updates)
 }
+
+func (h *UpdateHandler) GetByID(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	update, err := h.svc.GetByID(r.Context(), id)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to get update")
+		return
+	}
+	if update == nil {
+		writeError(w, http.StatusNotFound, "update not found")
+		return
+	}
+	writeJSON(w, http.StatusOK, update)
+}

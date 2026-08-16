@@ -32,3 +32,7 @@ func (s *UpdateService) ByMission(ctx context.Context, missionID string, limit i
 	}
 	return s.store.ByMission(ctx, missionID, limit)
 }
+
+func (s *UpdateService) GetByID(ctx context.Context, id string) (*domain.BlogUpdate, error) {
+	return s.store.GetByID(ctx, id)
+}

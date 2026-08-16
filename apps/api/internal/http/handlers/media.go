@@ -9,10 +9,11 @@ import (
 
 type MediaHandler struct {
 	client *nasa.ImagesClient
+	apod   *nasa.ApodClient
 }
 
-func NewMediaHandler(client *nasa.ImagesClient) *MediaHandler {
-	return &MediaHandler{client: client}
+func NewMediaHandler(client *nasa.ImagesClient, apod *nasa.ApodClient) *MediaHandler {
+	return &MediaHandler{client: client, apod: apod}
 }
 
 func (h *MediaHandler) Search(w http.ResponseWriter, r *http.Request) {
@@ -31,4 +32,13 @@ func (h *MediaHandler) Search(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJSON(w, http.StatusOK, result)
+}
+
+func (h *MediaHandler) Apod(w http.ResponseWriter, r *http.Request) {
+	apod, err := h.apod.Fetch(r.Context())
+	if err != nil {
+		writeError(w, http.StatusBadGateway, "failed to fetch APOD")
+		return
+	}
+	writeJSON(w, http.StatusOK, apod)
 }

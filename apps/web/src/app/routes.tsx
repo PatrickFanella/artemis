@@ -5,6 +5,7 @@ import { MissionsPage } from "@/routes/missions/index";
 import { MissionDetailPage } from "@/routes/missions/detail";
 import { SchedulePage } from "@/routes/schedule/index";
 import { UpdatesPage } from "@/routes/updates/index";
+import { ArticleDetailPage } from "@/routes/articles/detail";
 import { MediaPage } from "@/routes/media/index";
 import { ActivePage } from "@/routes/active/index";
 
@@ -21,6 +22,7 @@ export function AppRoutes() {
         <Route path="/missions/:id" element={<MissionDetailPage />} />
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/updates" element={<UpdatesPage />} />
+        <Route path="/updates/:id" element={<ArticleDetailPage />} />
         <Route path="/media" element={<MediaPage />} />
         <Route path="/active" element={<ActivePage />} />
       </Route>

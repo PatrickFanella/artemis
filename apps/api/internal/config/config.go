@@ -8,9 +8,10 @@ import (
 )
 
 type Config struct {
-	Port     int
-	DBPath   string
-	LogLevel zerolog.Level
+	Port        int
+	DBPath      string
+	LogLevel    zerolog.Level
+	NASAAPIKey  string
 }
 
 func Load() Config {
@@ -34,6 +35,12 @@ func Load() Config {
 		if lvl, err := zerolog.ParseLevel(v); err == nil {
 			cfg.LogLevel = lvl
 		}
+	}
+
+	if v := os.Getenv("NASA_API_KEY"); v != "" {
+		cfg.NASAAPIKey = v
+	} else {
+		cfg.NASAAPIKey = "DEMO_KEY"
 	}
 
 	return cfg

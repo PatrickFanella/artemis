@@ -13,9 +13,10 @@ import (
 )
 
 type Services struct {
-	Mission *service.MissionService
-	Update  *service.UpdateService
-	Active  *service.ActiveService
+	Mission    *service.MissionService
+	Update     *service.UpdateService
+	Active     *service.ActiveService
+	NASAAPIKey string
 }
 
 func New(svc Services) http.Handler {
@@ -31,7 +32,7 @@ func New(svc Services) http.Handler {
 
 	mh := handlers.NewMissionHandler(svc.Mission)
 	uh := handlers.NewUpdateHandler(svc.Update)
-	mdh := handlers.NewMediaHandler(nasa.NewImagesClient())
+	mdh := handlers.NewMediaHandler(nasa.NewImagesClient(), nasa.NewApodClient(svc.NASAAPIKey))
 	ah := handlers.NewActiveHandler(svc.Active)
 
 	r.Route("/api/v1", func(r chi.Router) {
@@ -44,9 +45,11 @@ func New(svc Services) http.Handler {
 
 		r.Get("/updates", uh.List)
 		r.Get("/updates/latest", uh.Latest)
+		r.Get("/updates/{id}", uh.GetByID)
 		r.Get("/missions/{id}/updates", uh.ByMission)
 
 		r.Get("/media", mdh.Search)
+		r.Get("/apod", mdh.Apod)
 
 		r.Get("/active", ah.GetDashboard)
 		r.Get("/active/telemetry", ah.GetTelemetry)

@@ -12,3 +12,7 @@ export function getUpdates(source?: string, limit = 20, offset = 0) {
 export function getLatestUpdates() {
   return api<BlogUpdate[]>("/api/v1/updates/latest");
 }
+
+export function getUpdate(id: string) {
+  return api<BlogUpdate>(`/api/v1/updates/${id}`);
+}

@@ -44,6 +44,15 @@ func main() {
 	updateSvc := service.NewUpdateService(blogStore)
 	activeSvc := service.NewActiveService(missionStore, blogStore, nasaClient, eventStore, liveTelemetry)
 
+	// Import curated articles (markdown) from the data directory on startup.
+	articlesDir := os.Getenv("ARTICLES_DIR")
+	if articlesDir == "" {
+		articlesDir = "./articles"
+	}
+	if err := jobs.ImportArticles(context.Background(), blogStore, articlesDir); err != nil {
+		log.Warn().Err(err).Msg("article import failed (continuing)")
+	}
+
 	// Start background jobs
 	ingester := jobs.NewRSSIngester(blogStore)
 	scheduler := jobs.NewScheduler(ingester, 15*time.Minute)
@@ -52,9 +61,10 @@ func main() {
 	go liveTelemetry.StartPoller(ctx, 60*time.Second)
 
 	r := router.New(router.Services{
-		Mission: missionSvc,
-		Update:  updateSvc,
-		Active:  activeSvc,
+		Mission:    missionSvc,
+		Update:     updateSvc,
+		Active:     activeSvc,
+		NASAAPIKey: cfg.NASAAPIKey,
 	})
 
 	srv := &http.Server{

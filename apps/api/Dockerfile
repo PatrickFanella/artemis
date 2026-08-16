@@ -26,6 +26,7 @@ WORKDIR /app
 
 COPY --from=builder /build/artemis-api .
 COPY --from=builder /build/internal/store/migrations ./migrations
+COPY --from=builder /build/data/articles ./articles
 
 USER appuser:appgroup
 

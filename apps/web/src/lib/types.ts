@@ -49,6 +49,7 @@ export interface BlogUpdate {
   url: string;
   author: string;
   summary: string;
+  content?: string;
   image_url: string;
   published_at: string;
   created_at: string;

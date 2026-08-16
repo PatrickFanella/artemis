@@ -1,0 +1,700 @@
+openapi: 3.0.3
+info:
+  title: Artemis API
+  version: 0.1.0
+  description: Public read-only API for Artemis mission, update, media, and active dashboard data.
+servers:
+  - url: http://localhost:8090
+    description: Local API default
+  - url: /
+    description: Same-origin or proxied deployment
+tags:
+  - name: Health
+  - name: Missions
+  - name: Updates
+  - name: Media
+  - name: Active
+paths:
+  /healthz:
+    get:
+      tags: [Health]
+      summary: Health check
+      operationId: getHealth
+      responses:
+        "200":
+          description: API is healthy.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+  /api/v1/missions:
+    get:
+      tags: [Missions]
+      summary: List missions
+      operationId: listMissions
+      responses:
+        "200":
+          description: Missions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Mission"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v1/missions/active:
+    get:
+      tags: [Missions]
+      summary: Get the active mission
+      operationId: getActiveMission
+      responses:
+        "200":
+          description: Active mission.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Mission"
+        "404":
+          description: No active mission exists.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v1/missions/{id}:
+    get:
+      tags: [Missions]
+      summary: Get a mission by ID
+      operationId: getMission
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+      responses:
+        "200":
+          description: Mission.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Mission"
+        "404":
+          description: Mission was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v1/missions/{id}/sections:
+    get:
+      tags: [Missions]
+      summary: List sections for a mission
+      operationId: listMissionSections
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+      responses:
+        "200":
+          description: Mission sections. Empty results are returned as an empty array.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MissionSection"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v1/missions/{id}/milestones:
+    get:
+      tags: [Missions]
+      summary: List milestones for a mission
+      operationId: listMissionMilestones
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+      responses:
+        "200":
+          description: Mission milestones. Empty results are returned as an empty array.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Milestone"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v1/updates:
+    get:
+      tags: [Updates]
+      summary: List updates
+      operationId: listUpdates
+      parameters:
+        - name: source
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional source filter.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+          description: Maximum number of updates. Invalid values are treated as 0 by the current API.
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+          description: Offset for pagination. Invalid values are treated as 0 by the current API.
+      responses:
+        "200":
+          description: Updates. Empty results are returned as an empty array.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BlogUpdate"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v1/updates/latest:
+    get:
+      tags: [Updates]
+      summary: List latest updates
+      operationId: listLatestUpdates
+      responses:
+        "200":
+          description: Latest updates. Empty results are returned as an empty array.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BlogUpdate"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v1/missions/{id}/updates:
+    get:
+      tags: [Updates]
+      summary: List updates for a mission
+      operationId: listMissionUpdates
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+          description: Maximum number of updates. Invalid values are treated as 0 by the current API.
+      responses:
+        "200":
+          description: Mission updates. Empty results are returned as an empty array.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BlogUpdate"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v1/media:
+    get:
+      tags: [Media]
+      summary: Search NASA media
+      operationId: searchMedia
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+            default: artemis
+          description: Search query. Defaults to `artemis` when omitted or empty.
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional NASA media type filter, such as `image` or `video`.
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+          description: Optional start year filter. Invalid values are treated as 0 by the current API.
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+          description: Optional result page. Invalid values are treated as 0 by the current API.
+      responses:
+        "200":
+          description: Media search results.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaSearchResult"
+        "502":
+          description: NASA media search failed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/v1/active:
+    get:
+      tags: [Active]
+      summary: Get active mission dashboard
+      operationId: getActiveDashboard
+      responses:
+        "200":
+          description: Active mission dashboard.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActiveMissionDashboard"
+        "404":
+          description: No active mission exists.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v1/active/telemetry:
+    get:
+      tags: [Active]
+      summary: Get active mission telemetry
+      operationId: getActiveTelemetry
+      responses:
+        "200":
+          description: Active mission telemetry.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TelemetrySnapshot"
+        "404":
+          description: No active mission exists.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /api/v1/active/events:
+    get:
+      tags: [Active]
+      summary: List active mission events
+      operationId: listActiveEvents
+      parameters:
+        - name: fd
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+          description: Optional flight day filter. Negative or non-integer values return 400.
+      responses:
+        "200":
+          description: Active mission events.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventsResponse"
+        "400":
+          description: Invalid flight day.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: No active mission exists.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+components:
+  parameters:
+    MissionId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Mission identifier.
+  responses:
+    InternalServerError:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+      additionalProperties: false
+      example:
+        error: mission not found
+    HealthResponse:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          example: ok
+      additionalProperties: false
+    CrewMember:
+      type: object
+      required: [name, role, bio, image]
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        bio:
+          type: string
+        image:
+          type: string
+      additionalProperties: false
+    Mission:
+      type: object
+      required: [id, name, tagline, description, status, duration, crew, image_url, created_at, updated_at]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        tagline:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [active, upcoming, completed]
+        launch_date:
+          type: string
+          format: date-time
+          nullable: true
+        duration:
+          type: string
+        crew:
+          type: array
+          items:
+            $ref: "#/components/schemas/CrewMember"
+        image_url:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      additionalProperties: false
+    MissionSection:
+      type: object
+      required: [id, mission_id, name, slug, description, order, day_range, status]
+      properties:
+        id:
+          type: string
+        mission_id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        order:
+          type: integer
+        day_range:
+          type: string
+        status:
+          type: string
+          enum: [completed, active, upcoming]
+      additionalProperties: false
+    Milestone:
+      type: object
+      required: [id, mission_id, section_id, title, description, order]
+      properties:
+        id:
+          type: string
+        mission_id:
+          type: string
+        section_id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        planned_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        order:
+          type: integer
+      additionalProperties: false
+    BlogUpdate:
+      type: object
+      required: [id, source, title, url, author, summary, published_at, created_at]
+      properties:
+        id:
+          type: string
+        mission_id:
+          type: string
+        source:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
+        author:
+          type: string
+        summary:
+          type: string
+        image_url:
+          type: string
+        published_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+      additionalProperties: false
+    MediaAsset:
+      type: object
+      required: [nasa_id, title, description, media_type, date_created, center, keywords, preview_url]
+      properties:
+        nasa_id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        media_type:
+          type: string
+        date_created:
+          type: string
+        center:
+          type: string
+        photographer:
+          type: string
+        keywords:
+          type: array
+          items:
+            type: string
+        preview_url:
+          type: string
+      additionalProperties: false
+    MediaSearchResult:
+      type: object
+      required: [items, total_hits]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/MediaAsset"
+        total_hits:
+          type: integer
+      additionalProperties: false
+    TelemetrySnapshot:
+      type: object
+      required: [mission_id, mission_elapsed, distance_from_earth, distance_from_moon, velocity, current_phase, is_live, tracker_url, updated_at]
+      properties:
+        mission_id:
+          type: string
+        mission_elapsed:
+          type: string
+        distance_from_earth:
+          type: number
+          format: double
+        distance_from_moon:
+          type: number
+          format: double
+        velocity:
+          type: number
+          format: double
+        current_phase:
+          type: string
+        is_live:
+          type: boolean
+        tracker_url:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+      additionalProperties: false
+    MissionEvent:
+      type: object
+      required: [id, mission_id, met_seconds, flight_day, category, title, description, status]
+      properties:
+        id:
+          type: string
+        mission_id:
+          type: string
+        met_seconds:
+          type: integer
+        duration_seconds:
+          type: integer
+        flight_day:
+          type: integer
+        category:
+          type: string
+          enum: [propulsion, navigation, crew, communication, system, science]
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [completed, active, upcoming]
+      additionalProperties: false
+    MissionClock:
+      type: object
+      required: [launch_time, met_seconds, met_display, flight_day, flight_day_label, flight_day_seconds, mission_progress, is_live]
+      properties:
+        launch_time:
+          type: string
+          format: date-time
+        met_seconds:
+          type: integer
+        met_display:
+          type: string
+          example: "04:12:30:05"
+        flight_day:
+          type: integer
+        flight_day_label:
+          type: string
+          example: FD04
+        flight_day_seconds:
+          type: integer
+        mission_progress:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+        is_live:
+          type: boolean
+      additionalProperties: false
+    Trajectory:
+      type: object
+      required: [distance_from_earth_km, distance_from_moon_km, velocity_kmh, phase, phase_label]
+      properties:
+        distance_from_earth_km:
+          type: number
+          format: double
+        distance_from_moon_km:
+          type: number
+          format: double
+        velocity_kmh:
+          type: number
+          format: double
+        phase:
+          type: string
+        phase_label:
+          type: string
+      additionalProperties: false
+    MissionLinks:
+      type: object
+      required: [arow, dsn, nasa_tv, mission_page]
+      properties:
+        arow:
+          type: string
+        dsn:
+          type: string
+        nasa_tv:
+          type: string
+        mission_page:
+          type: string
+      additionalProperties: false
+    ActiveMissionDashboard:
+      type: object
+      required:
+        - mission
+        - clock
+        - trajectory
+        - current_event
+        - next_event
+        - recent_events
+        - upcoming_events
+        - current_section
+        - next_milestone
+        - sections
+        - telemetry
+        - latest_updates
+        - latest_media
+        - links
+      properties:
+        mission:
+          $ref: "#/components/schemas/Mission"
+        clock:
+          $ref: "#/components/schemas/MissionClock"
+        trajectory:
+          $ref: "#/components/schemas/Trajectory"
+        current_event:
+          allOf:
+            - $ref: "#/components/schemas/MissionEvent"
+          nullable: true
+        next_event:
+          allOf:
+            - $ref: "#/components/schemas/MissionEvent"
+          nullable: true
+        recent_events:
+          type: array
+          items:
+            $ref: "#/components/schemas/MissionEvent"
+        upcoming_events:
+          type: array
+          items:
+            $ref: "#/components/schemas/MissionEvent"
+        current_section:
+          allOf:
+            - $ref: "#/components/schemas/MissionSection"
+          nullable: true
+        next_milestone:
+          allOf:
+            - $ref: "#/components/schemas/Milestone"
+          nullable: true
+        sections:
+          type: array
+          items:
+            $ref: "#/components/schemas/MissionSection"
+        telemetry:
+          $ref: "#/components/schemas/TelemetrySnapshot"
+        latest_updates:
+          type: array
+          items:
+            $ref: "#/components/schemas/BlogUpdate"
+        latest_media:
+          type: array
+          items:
+            $ref: "#/components/schemas/MediaAsset"
+        links:
+          $ref: "#/components/schemas/MissionLinks"
+      additionalProperties: false
+    EventsResponse:
+      type: object
+      required: [events, total]
+      properties:
+        events:
+          type: array
+          items:
+            $ref: "#/components/schemas/MissionEvent"
+        total:
+          type: integer
+        flight_day:
+          type: integer
+      additionalProperties: false

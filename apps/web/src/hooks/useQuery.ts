@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { getSSRData } from "@/lib/ssrData";
 
 interface QueryResult<T> {
   data: T | null;
@@ -7,38 +8,57 @@ interface QueryResult<T> {
   refetch: () => void;
 }
 
-export function useQuery<T>(fetcher: () => Promise<T>, deps: unknown[] = []): QueryResult<T> {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
+/**
+ * Data-fetching hook with optional build-time (SSG) data injection.
+ *
+ * When `key` is provided and the SSR data map contains that key, the initial
+ * state is seeded from it (so prerendered HTML shows real content) and the
+ * first client fetch is silent (no loading flash).  Otherwise it fetches
+ * immediately as before.
+ */
+export function useQuery<T>(
+  fetcher: () => Promise<T>,
+  deps: unknown[] = [],
+  key?: string,
+): QueryResult<T> {
+  const initial = key ? getSSRData<T>(key) : null;
+  const [data, setData] = useState<T | null>(initial);
+  const [loading, setLoading] = useState(initial == null);
   const [error, setError] = useState<string | null>(null);
 
   const fetcherRef = useRef(fetcher);
   fetcherRef.current = fetcher;
 
-  const fetchData = useCallback(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
+  const fetchData = useCallback(
+    (silent = false) => {
+      let cancelled = false;
+      if (!silent) setLoading(true);
+      setError(null);
 
-    fetcherRef.current()
-      .then((result) => {
-        if (!cancelled) {
-          setData(result);
-          setLoading(false);
-        }
-      })
-      .catch((err: Error) => {
-        if (!cancelled) {
-          setError(err.message);
-          setLoading(false);
-        }
-      });
+      fetcherRef.current()
+        .then((result) => {
+          if (!cancelled) {
+            setData(result);
+            setLoading(false);
+          }
+        })
+        .catch((err: Error) => {
+          if (!cancelled) {
+            setError(err.message);
+            setLoading(false);
+          }
+        });
 
-    return () => { cancelled = true; };
-  }, deps);
+      return () => {
+        cancelled = true;
+      };
+    },
+    deps,
+  );
 
   useEffect(() => {
-    return fetchData();
+    // Refresh silently when hydrated from SSR data; otherwise fetch loudly.
+    return fetchData(initial != null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchData]);
 

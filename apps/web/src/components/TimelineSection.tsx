@@ -3,42 +3,29 @@ import { MilestoneItem } from "./MilestoneItem";
 import type { MissionSection, Milestone } from "@/lib/types";
 
 export function TimelineSection({
-  section,
-  milestones,
+  section, milestones,
 }: {
-  section: MissionSection;
-  milestones: Milestone[];
+  section: MissionSection; milestones: Milestone[];
 }) {
   const dotColor =
-    section.status === "completed"
-      ? "bg-status-completed"
-      : section.status === "active"
-        ? "bg-status-active animate-pulse"
-        : "bg-space-gray";
+    section.status === "completed" ? "bg-status-completed" :
+    section.status === "active" ? "bg-status-active animate-pulse" : "bg-space-slate";
 
   return (
     <div className="relative pl-10">
-      <div
-        className={`absolute left-2.5 top-1.5 w-3 h-3 rounded-full ${dotColor} ring-4 ring-space-black`}
-      />
-      <div className="glass-card p-5">
+      <div className={`absolute left-2.5 top-1.5 w-3 h-3 rounded-full ${dotColor} ring-4 ring-space-black`} />
+      <div className="panel p-5">
         <div className="flex items-start justify-between mb-2">
           <div>
             <h3 className="text-lg font-display font-semibold tracking-tight">{section.name}</h3>
-            <span className="text-xs text-lunar-white/40">
-              {section.day_range}
-            </span>
+            <span className="text-faint text-sm">{section.day_range}</span>
           </div>
           <StatusBadge status={section.status} />
         </div>
-        <p className="text-lunar-white/50 text-sm mb-4">
-          {section.description}
-        </p>
+        <p className="text-muted text-sm mb-4">{section.description}</p>
         {milestones.length > 0 && (
-          <div className="space-y-2 border-t border-white/[0.06] pt-3">
-            {milestones.map((m) => (
-              <MilestoneItem key={m.id} milestone={m} />
-            ))}
+          <div className="space-y-2 border-t border-subtle pt-3">
+            {milestones.map((m) => <MilestoneItem key={m.id} milestone={m} />)}
           </div>
         )}
       </div>

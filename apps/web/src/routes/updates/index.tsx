@@ -3,7 +3,9 @@ import { PageHeader } from "@/components/PageHeader";
 import { UpdateCard } from "@/components/UpdateCard";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ErrorMessage } from "@/components/ErrorMessage";
+import { SeoHead } from "@/components/SeoHead";
 import { useQuery } from "@/hooks/useQuery";
+import { SSR_KEYS } from "@/lib/ssrKeys";
 import { getUpdates } from "@/api/updates";
 
 const sources = [
@@ -15,47 +17,27 @@ const sources = [
 
 export function UpdatesPage() {
   const [source, setSource] = useState("");
-
   const fetcher = useCallback(() => getUpdates(source || undefined, 50), [source]);
-  const { data: updates, loading, error } = useQuery(fetcher, [source]);
-
-  if (error) return <ErrorMessage message={error} />;
+  const { data: updates, loading, error } = useQuery(fetcher, [source], SSR_KEYS.updatesPage);
 
   return (
     <div>
-      <PageHeader
-        title="Latest Updates"
-        subtitle="News and updates from the Artemis program"
-      />
+      <SeoHead title="Mission Updates" description="Latest news from NASA's Artemis program." canonicalPath="/updates" />
+      <PageHeader title="Mission Updates" subtitle="News and updates from the Artemis program" />
 
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-1.5 mb-6 flex-wrap">
         {sources.map((s) => (
-          <button
-            key={s.key}
-            onClick={() => setSource(s.key)}
-            className={`px-4 py-2 rounded-xl text-sm transition-all ${
-              source === s.key
-                ? "bg-artemis-blue text-white shadow-[0_0_12px_rgba(59,130,246,0.2)]"
-                : "glass-card text-lunar-white/60 hover:text-lunar-white"
-            }`}
-          >
-            {s.label}
-          </button>
+          <button key={s.key} onClick={() => setSource(s.key)}
+            className={`px-3 py-2 rounded-lg text-sm transition-colors ${source === s.key ? "bg-artemis-blue text-white" : "panel panel-hover text-secondary"}`}>{s.label}</button>
         ))}
       </div>
 
-      {loading ? (
-        <LoadingSpinner />
-      ) : updates && updates.length > 0 ? (
-        <div className="space-y-4">
-          {updates.map((update) => (
-            <UpdateCard key={update.id} update={update} />
-          ))}
-        </div>
+      {error && <ErrorMessage message={error} />}
+
+      {loading ? <LoadingSpinner /> : updates && updates.length > 0 ? (
+        <div className="space-y-2">{updates.map((update) => <UpdateCard key={update.id} update={update} />)}</div>
       ) : (
-        <div className="text-center py-12 text-lunar-white/40">
-          No updates found
-        </div>
+        <div className="text-center py-12 text-muted">No updates found</div>
       )}
     </div>
   );

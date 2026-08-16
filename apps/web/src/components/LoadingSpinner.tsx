@@ -1,10 +1,10 @@
 export function LoadingSpinner() {
   return (
     <div className="flex items-center justify-center py-20">
-      <div className="relative">
-        <div className="w-10 h-10 border-2 border-artemis-blue/20 rounded-full" />
-        <div className="absolute inset-0 w-10 h-10 border-2 border-transparent border-t-artemis-blue rounded-full animate-spin" />
-        <div className="absolute inset-1 w-8 h-8 border border-transparent border-t-artemis-gold/50 rounded-full animate-spin" style={{ animationDirection: "reverse", animationDuration: "1.5s" }} />
+      <div className="flex items-center gap-1.5">
+        <div className="w-2.5 h-2.5 rounded-full bg-artemis-blue animate-[pulse-subtle_1.5s_ease-in-out_infinite]" />
+        <div className="w-2.5 h-2.5 rounded-full bg-artemis-blue animate-[pulse-subtle_1.5s_ease-in-out_0.2s_infinite]" />
+        <div className="w-2.5 h-2.5 rounded-full bg-artemis-blue animate-[pulse-subtle_1.5s_ease-in-out_0.4s_infinite]" />
       </div>
     </div>
   );

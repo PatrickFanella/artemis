@@ -1,41 +1,28 @@
 import type { MediaAsset } from "@/lib/types";
 
-export function MediaCard({
-  asset,
-  onClick,
-}: {
-  asset: MediaAsset;
-  onClick: () => void;
-}) {
+export function MediaCard({ asset, onClick }: { asset: MediaAsset; onClick: () => void }) {
   return (
-    <button
-      onClick={onClick}
-      className="text-left group glass-card glass-card-hover overflow-hidden"
-    >
-      <div className="aspect-video relative overflow-hidden bg-space-gray/50">
+    <button onClick={onClick} className="text-left w-full panel panel-hover overflow-hidden">
+      <div className="aspect-video relative overflow-hidden bg-space-slate/30">
         {asset.preview_url ? (
           <img
             src={asset.preview_url}
             alt={asset.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-400"
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-lunar-white/20">
-            No preview
-          </div>
+          <div className="w-full h-full flex items-center justify-center text-faint text-xs">No preview</div>
         )}
         {asset.media_type === "video" && (
-          <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-0.5 rounded-md border border-white/10">
+          <div className="absolute top-2 right-2 bg-space-black/70 text-xs px-2 py-0.5 rounded border border-subtle text-muted">
             Video
           </div>
         )}
       </div>
       <div className="p-3">
-        <h3 className="text-sm font-medium line-clamp-2 group-hover:text-artemis-blue transition-colors">
-          {asset.title}
-        </h3>
-        <p className="text-xs text-lunar-white/40 mt-1">{asset.center}</p>
+        <h3 className="text-sm font-medium line-clamp-2 leading-snug">{asset.title}</h3>
+        <p className="text-faint text-xs mt-1">{asset.center}</p>
       </div>
     </button>
   );

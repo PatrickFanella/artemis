@@ -1,24 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  /* NASA / Artemis palette */
-  --color-space-black: #060B18;
-  --color-space-dark: #0D1526;
-  --color-space-gray: #1A2340;
-  --color-lunar-white: #E8EAF6;
-  --color-artemis-blue: #1D4ED8;
-  --color-artemis-gold: #F5A623;
-  --color-artemis-cyan: #06B6D4;
-  --color-artemis-red: #FC3D21;
+  /* Modern space-agency palette — cooler, more institutional */
+  --color-space-black: #0A0E17;
+  --color-space-dark: #131A2A;
+  --color-space-gray: #1E2940;
+  --color-space-slate: #293548;
+  --color-lunar-white: #E6EAF0;
+  --color-artemis-blue: #2962FF;
+  --color-artemis-gold: #C2892A;
+  --color-artemis-cyan: #00B8D4;
+  --color-artemis-red: #E53935;
   --color-status-active: #22c55e;
-  --color-status-upcoming: #1D4ED8;
+  --color-status-upcoming: #3b82f6;
   --color-status-completed: #6b7280;
-  --color-cat-propulsion: #FC3D21;
-  --color-cat-navigation: #1D4ED8;
+  --color-cat-propulsion: #E53935;
+  --color-cat-navigation: #2962FF;
   --color-cat-crew: #22c55e;
   --color-cat-communication: #a855f7;
-  --color-cat-system: #F5A623;
-  --color-cat-science: #06b6d4;
+  --color-cat-system: #C2892A;
+  --color-cat-science: #00B8D4;
 
   --font-display: "Space Grotesk", system-ui, sans-serif;
 }
@@ -28,6 +29,16 @@
 body {
   @apply bg-space-black text-lunar-white min-h-screen antialiased;
   font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-size: 0.9375rem;  /* 15px base */
+  line-height: 1.6;
+}
+
+/* ─── Focus (accessibility) ─── */
+
+:focus-visible {
+  outline: 2px solid var(--color-artemis-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* ─── Typography ─── */
@@ -35,260 +46,179 @@ body {
 .met-display {
   font-family: "JetBrains Mono", "Fira Code", "SF Mono", "Consolas", monospace;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
-/* ─── Glass Card System ─── */
+/* ─── Panel / Card System ─── */
 
+.panel {
+  background: var(--color-space-dark);
+  border: 1px solid color-mix(in oklab, var(--color-lunar-white) 7%, transparent);
+  border-radius: 0.5rem;
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+
+.panel-hover:hover {
+  border-color: color-mix(in oklab, var(--color-artemis-blue) 35%, transparent);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    0 0 0 1px color-mix(in oklab, var(--color-artemis-blue) 8%, transparent);
+  transform: translateY(-1px);
+}
+
+.panel-highlight {
+  border-color: color-mix(in oklab, var(--color-status-active) 30%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-status-active) 8%, transparent);
+}
+
+/* Keep glass-card for depth layers (modals, overlays) */
 .glass-card {
-  background: rgba(13, 21, 38, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 0.75rem;
-  transition: all 300ms ease-out;
+  background: color-mix(in oklab, var(--color-space-dark) 85%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in oklab, var(--color-lunar-white) 8%, transparent);
+  border-radius: 0.5rem;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 
 .glass-card-hover:hover {
-  border-color: rgba(29, 78, 216, 0.3);
-  background: rgba(13, 21, 38, 0.8);
-  box-shadow: 0 0 20px rgba(29, 78, 216, 0.08),
-              0 4px 16px rgba(0, 0, 0, 0.3);
-  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--color-artemis-blue) 35%, transparent);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px color-mix(in oklab, var(--color-artemis-blue) 8%, transparent);
 }
 
 .glass-card-active {
-  border-color: rgba(34, 197, 94, 0.3);
-  box-shadow: 0 0 20px rgba(34, 197, 94, 0.06),
-              0 0 0 1px rgba(34, 197, 94, 0.1);
+  border-color: color-mix(in oklab, var(--color-status-active) 30%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-status-active) 10%, transparent);
 }
 
-/* ─── Enhanced Glow Effects ─── */
+/* ─── Glow Effects ─── */
 
 .glow-green {
-  box-shadow: 0 0 8px rgba(34, 197, 94, 0.4),
-              0 0 24px rgba(34, 197, 94, 0.15),
-              0 0 48px rgba(34, 197, 94, 0.05);
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.15), 0 0 16px rgba(34, 197, 94, 0.08);
 }
-
 .glow-blue {
-  box-shadow: 0 0 8px rgba(29, 78, 216, 0.4),
-              0 0 24px rgba(29, 78, 216, 0.15),
-              0 0 48px rgba(29, 78, 216, 0.05);
+  box-shadow: 0 0 0 1px rgba(41, 98, 255, 0.15), 0 0 16px rgba(41, 98, 255, 0.08);
 }
-
 .glow-gold {
-  box-shadow: 0 0 8px rgba(245, 166, 35, 0.4),
-              0 0 24px rgba(245, 166, 35, 0.15),
-              0 0 48px rgba(245, 166, 35, 0.05);
+  box-shadow: 0 0 0 1px rgba(194, 137, 42, 0.15), 0 0 16px rgba(194, 137, 42, 0.08);
 }
-
 .glow-cyan {
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.4),
-              0 0 24px rgba(6, 182, 212, 0.15),
-              0 0 48px rgba(6, 182, 212, 0.05);
+  box-shadow: 0 0 0 1px rgba(0, 184, 212, 0.15), 0 0 16px rgba(0, 184, 212, 0.08);
 }
 
-/* ─── Starfield Background ─── */
+/* ─── Atmosphere ─── */
 
 .atmosphere {
   position: relative;
 }
 
-/* Star layer 1: dim, many, slow twinkle */
+/* Subtle noise grain (replaces the starfield) */
 .atmosphere::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image:
-    radial-gradient(1px 1px at 2% 8%, rgba(255,255,255,0.45), transparent),
-    radial-gradient(1px 1px at 5% 35%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 8% 72%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 11% 15%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 14% 58%, rgba(255,255,255,0.25), transparent),
-    radial-gradient(1px 1px at 17% 91%, rgba(255,255,255,0.5), transparent),
-    radial-gradient(1px 1px at 20% 28%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 23% 65%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 26% 3%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 29% 48%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 32% 82%, rgba(255,255,255,0.45), transparent),
-    radial-gradient(1px 1px at 35% 19%, rgba(255,255,255,0.25), transparent),
-    radial-gradient(1px 1px at 38% 55%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 41% 88%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 44% 12%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 47% 42%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 50% 75%, rgba(255,255,255,0.5), transparent),
-    radial-gradient(1px 1px at 53% 22%, rgba(255,255,255,0.25), transparent),
-    radial-gradient(1px 1px at 56% 63%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 59% 95%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 62% 31%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 65% 68%, rgba(255,255,255,0.45), transparent),
-    radial-gradient(1px 1px at 68% 5%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 71% 52%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 74% 85%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 77% 18%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 80% 45%, rgba(255,255,255,0.5), transparent),
-    radial-gradient(1px 1px at 83% 78%, rgba(255,255,255,0.25), transparent),
-    radial-gradient(1px 1px at 86% 9%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 89% 38%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 92% 71%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 95% 25%, rgba(255,255,255,0.45), transparent),
-    radial-gradient(1px 1px at 98% 59%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 3% 44%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 9% 87%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 16% 33%, rgba(255,255,255,0.25), transparent),
-    radial-gradient(1px 1px at 22% 76%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 28% 11%, rgba(255,255,255,0.5), transparent),
-    radial-gradient(1px 1px at 34% 62%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 40% 94%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 46% 27%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 52% 50%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 58% 83%, rgba(255,255,255,0.45), transparent),
-    radial-gradient(1px 1px at 64% 16%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 70% 47%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 76% 80%, rgba(255,255,255,0.4), transparent),
-    radial-gradient(1px 1px at 82% 13%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(1px 1px at 88% 56%, rgba(255,255,255,0.5), transparent),
-    radial-gradient(1px 1px at 94% 89%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 1% 51%, rgba(255,255,255,0.25), transparent);
-  animation: twinkle-dim 8s ease-in-out infinite alternate;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
 }
 
-/* Star layer 2: bright, fewer, faster twinkle */
+/* Subtle top-to-bottom vignette */
 .atmosphere::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image:
-    radial-gradient(1.5px 1.5px at 4% 14%, rgba(255,255,255,0.7), transparent),
-    radial-gradient(1.5px 1.5px at 12% 52%, rgba(255,255,255,0.6), transparent),
-    radial-gradient(2px 2px at 19% 87%, rgba(255,255,255,0.8), transparent),
-    radial-gradient(1.5px 1.5px at 27% 32%, rgba(255,255,255,0.65), transparent),
-    radial-gradient(1.5px 1.5px at 33% 69%, rgba(255,255,255,0.55), transparent),
-    radial-gradient(2px 2px at 42% 8%, rgba(255,255,255,0.75), transparent),
-    radial-gradient(1.5px 1.5px at 48% 41%, rgba(255,255,255,0.6), transparent),
-    radial-gradient(1.5px 1.5px at 55% 74%, rgba(255,255,255,0.7), transparent),
-    radial-gradient(2px 2px at 63% 21%, rgba(255,255,255,0.8), transparent),
-    radial-gradient(1.5px 1.5px at 69% 58%, rgba(255,255,255,0.55), transparent),
-    radial-gradient(1.5px 1.5px at 77% 93%, rgba(255,255,255,0.65), transparent),
-    radial-gradient(2px 2px at 84% 37%, rgba(255,255,255,0.75), transparent),
-    radial-gradient(1.5px 1.5px at 91% 65%, rgba(255,255,255,0.6), transparent),
-    radial-gradient(1.5px 1.5px at 97% 11%, rgba(255,255,255,0.7), transparent),
-    radial-gradient(2px 2px at 7% 78%, rgba(255,255,255,0.8), transparent),
-    radial-gradient(1.5px 1.5px at 15% 23%, rgba(255,255,255,0.6), transparent),
-    radial-gradient(1.5px 1.5px at 24% 56%, rgba(255,255,255,0.7), transparent),
-    radial-gradient(2px 2px at 31% 92%, rgba(255,255,255,0.65), transparent),
-    radial-gradient(1.5px 1.5px at 39% 17%, rgba(255,255,255,0.55), transparent),
-    radial-gradient(1.5px 1.5px at 46% 63%, rgba(255,255,255,0.75), transparent),
-    radial-gradient(2px 2px at 54% 3%, rgba(255,255,255,0.8), transparent),
-    radial-gradient(1.5px 1.5px at 61% 45%, rgba(255,255,255,0.6), transparent),
-    radial-gradient(1.5px 1.5px at 73% 82%, rgba(255,255,255,0.7), transparent),
-    radial-gradient(2px 2px at 80% 29%, rgba(255,255,255,0.65), transparent),
-    radial-gradient(1.5px 1.5px at 87% 55%, rgba(255,255,255,0.75), transparent);
-  animation: twinkle-bright 5s ease-in-out infinite alternate;
-}
-
-/* Ambient glow orb */
-.ambient-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.15) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
 }
 
 /* ─── Animations ─── */
 
-@keyframes twinkle-dim {
-  0% { opacity: 0.4; }
-  50% { opacity: 0.7; }
-  100% { opacity: 0.5; }
-}
-
-@keyframes twinkle-bright {
-  0% { opacity: 0.5; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-@keyframes orbit-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.orbit-pulse {
-  animation: orbit-pulse 2s ease-in-out infinite;
-}
-
-@keyframes scan-line {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
 @keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out forwards;
+  animation: fade-in-up 0.4s ease-out forwards;
 }
 
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 /* ─── Category Badges ─── */
 
-.cat-propulsion { @apply bg-cat-propulsion/20 text-cat-propulsion border-cat-propulsion/30; }
-.cat-navigation { @apply bg-cat-navigation/20 text-cat-navigation border-cat-navigation/30; }
-.cat-crew { @apply bg-cat-crew/20 text-cat-crew border-cat-crew/30; }
-.cat-communication { @apply bg-cat-communication/20 text-cat-communication border-cat-communication/30; }
-.cat-system { @apply bg-cat-system/20 text-cat-system border-cat-system/30; }
-.cat-science { @apply bg-cat-science/20 text-cat-science border-cat-science/30; }
+.cat-propulsion { @apply bg-cat-propulsion/15 text-cat-propulsion border-cat-propulsion/25; }
+.cat-navigation { @apply bg-cat-navigation/15 text-cat-navigation border-cat-navigation/25; }
+.cat-crew { @apply bg-cat-crew/15 text-cat-crew border-cat-crew/25; }
+.cat-communication { @apply bg-cat-communication/15 text-cat-communication border-cat-communication/25; }
+.cat-system { @apply bg-cat-system/15 text-cat-system border-cat-system/25; }
+.cat-science { @apply bg-cat-science/15 text-cat-science border-cat-science/25; }
+
+/* ============================================================
+   Semantic text tiers
+   ============================================================ */
+
+@utility text-secondary {
+  color: color-mix(in oklab, var(--color-lunar-white) 60%, transparent);
+}
+
+@utility text-muted {
+  color: color-mix(in oklab, var(--color-lunar-white) 40%, transparent);
+}
+
+@utility text-faint {
+  color: color-mix(in oklab, var(--color-lunar-white) 25%, transparent);
+}
+
+/* ============================================================
+   Semantic borders
+   ============================================================ */
+
+@utility border-subtle {
+  border-color: color-mix(in oklab, var(--color-lunar-white) 7%, transparent);
+}
+
+@utility border-default {
+  border-color: color-mix(in oklab, var(--color-lunar-white) 12%, transparent);
+}
+
+/* ============================================================
+   Typography utilities
+   ============================================================ */
+
+@utility label {
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.065em;
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
 
 /* ─── Scrollbar ─── */
 
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-space-black);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-space-gray);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-artemis-blue);
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-space-black); }
+::-webkit-scrollbar-thumb { background: var(--color-space-slate); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-artemis-blue); }
 
 /* ─── Reduced Motion ─── */
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

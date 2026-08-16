@@ -1,8 +1,8 @@
-import { api } from "./client";
+import { api, apiOrNull } from "./client";
 import type { ActiveMissionDashboard, TelemetrySnapshot, EventsResponse } from "@/lib/types";
 
 export function getActiveDashboard() {
-  return api<ActiveMissionDashboard>("/api/v1/active");
+  return apiOrNull<ActiveMissionDashboard>("/api/v1/active");
 }
 
 export function getActiveTelemetry() {

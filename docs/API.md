@@ -62,7 +62,13 @@ GET /api/v1/missions/active
 GET /api/v1/missions/{id}
 GET /api/v1/missions/{id}/sections
 GET /api/v1/missions/{id}/milestones
+GET /api/v1/missions/{id}/events?fd={flightDay}
 ```
+
+The events endpoint returns a per-mission event timeline. The optional `fd`
+query parameter filters to a single flight day. Event statuses are computed
+from the mission's launch date: `completed` for past events, `active` for the
+current event, and `upcoming` for future events.
 
 ### Updates
 

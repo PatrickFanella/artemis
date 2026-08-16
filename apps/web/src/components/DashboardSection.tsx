@@ -10,7 +10,7 @@ export function DashboardSection({
   children: ReactNode;
 }) {
   return (
-    <section className="mb-8">
+    <section>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-display font-semibold tracking-tight">{title}</h2>
         {action}

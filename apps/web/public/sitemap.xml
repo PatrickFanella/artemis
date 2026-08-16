@@ -8,16 +8,41 @@
   <url>
     <loc>https://artemis.subcult.tv/missions</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://artemis.subcult.tv/active</loc>
-    <changefreq>hourly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://artemis.subcult.tv/schedule</loc>
+    <loc>https://artemis.subcult.tv/missions/artemis-1</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://artemis.subcult.tv/missions/artemis-2</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://artemis.subcult.tv/missions/artemis-3</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://artemis.subcult.tv/missions/artemis-4</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://artemis.subcult.tv/missions/artemis-5</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://artemis.subcult.tv/active</loc>
     <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://artemis.subcult.tv/schedule</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
@@ -28,6 +53,6 @@
   <url>
     <loc>https://artemis.subcult.tv/updates</loc>
     <changefreq>daily</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
 </urlset>

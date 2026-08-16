@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/onnwee/artemis/apps/api/internal/domain"
@@ -77,6 +78,30 @@ func (h *MissionHandler) GetMilestones(w http.ResponseWriter, r *http.Request) {
 		milestones = []domain.Milestone{}
 	}
 	writeJSON(w, http.StatusOK, milestones)
+}
+
+func (h *MissionHandler) GetEvents(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	fd := 0
+	if fdStr := r.URL.Query().Get("fd"); fdStr != "" {
+		parsed, err := strconv.Atoi(fdStr)
+		if err != nil || parsed < 0 {
+			writeError(w, http.StatusBadRequest, "invalid flight day")
+			return
+		}
+		fd = parsed
+	}
+
+	resp, err := h.svc.GetEvents(r.Context(), id, fd)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to get events")
+		return
+	}
+	if resp == nil {
+		writeError(w, http.StatusNotFound, "mission not found")
+		return
+	}
+	writeJSON(w, http.StatusOK, resp)
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {

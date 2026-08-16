@@ -40,6 +40,7 @@ func New(svc Services) http.Handler {
 		r.Get("/missions/{id}", mh.GetMission)
 		r.Get("/missions/{id}/sections", mh.GetSections)
 		r.Get("/missions/{id}/milestones", mh.GetMilestones)
+		r.Get("/missions/{id}/events", mh.GetEvents)
 
 		r.Get("/updates", uh.List)
 		r.Get("/updates/latest", uh.Latest)

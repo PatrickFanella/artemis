@@ -40,7 +40,7 @@ func main() {
 	nasaClient := nasa.NewImagesClient()
 	liveTelemetry := service.NewLiveTelemetry()
 
-	missionSvc := service.NewMissionService(missionStore)
+	missionSvc := service.NewMissionService(missionStore, eventStore)
 	updateSvc := service.NewUpdateService(blogStore)
 	activeSvc := service.NewActiveService(missionStore, blogStore, nasaClient, eventStore, liveTelemetry)
 

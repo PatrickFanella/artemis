@@ -144,7 +144,7 @@ export function HomePage() {
                 >
                   {asset.preview_url && (
                     <img
-                      src={asset.preview_url}
+                      src={asset.large_url || asset.preview_url}
                       alt={asset.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-400"
                       loading="lazy"

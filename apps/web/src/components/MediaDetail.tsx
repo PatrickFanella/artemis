@@ -1,11 +1,13 @@
 import type { MediaAsset } from "@/lib/types";
 
 export function MediaDetail({ asset, onClose }: { asset: MediaAsset; onClose: () => void }) {
+  const src = asset.large_url || asset.preview_url;
+
   return (
     <div className="fixed inset-0 z-50 bg-space-black/80 flex items-center justify-center p-4" onClick={onClose}>
       <div className="glass-card max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-fade-in-up" onClick={(e) => e.stopPropagation()}>
         <div className="relative">
-          {asset.preview_url && <img src={asset.preview_url} alt={asset.title} className="w-full rounded-t-lg" />}
+          {src && <img src={src} alt={asset.title} className="w-full rounded-t-lg" />}
           <button
             onClick={onClose}
             className="absolute top-3 right-3 w-8 h-8 bg-space-black/70 rounded-full flex items-center justify-center text-lunar-white/80 hover:text-lunar-white border border-default transition-colors"

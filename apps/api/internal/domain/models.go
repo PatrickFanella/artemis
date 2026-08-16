@@ -69,6 +69,7 @@ type MediaAsset struct {
 	Photographer string   `json:"photographer,omitempty"`
 	Keywords     []string `json:"keywords"`
 	PreviewURL   string   `json:"preview_url"`
+	LargeURL     string   `json:"large_url,omitempty"`
 }
 
 type MediaSearchResult struct {

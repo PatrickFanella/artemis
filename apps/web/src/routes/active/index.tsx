@@ -41,7 +41,7 @@ function BetweenMissions() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {media.items.slice(0, 6).map((asset) => (
               <div key={asset.nasa_id} className="aspect-video rounded-md overflow-hidden bg-space-slate/30 border border-subtle">
-                {asset.preview_url && <img src={asset.preview_url} alt={asset.title} className="w-full h-full object-cover" loading="lazy" />}
+                {asset.preview_url && <img src={asset.large_url || asset.preview_url} alt={asset.title} className="w-full h-full object-cover" loading="lazy" />}
               </div>
             ))}
           </div>
@@ -120,7 +120,7 @@ export function ActivePage() {
             <div className="grid grid-cols-2 gap-2">
               {latest_media.slice(0, 4).map((asset) => (
                 <div key={asset.nasa_id} className="aspect-video rounded-md overflow-hidden bg-space-slate/30 border border-subtle">
-                  {asset.preview_url && <img src={asset.preview_url} alt={asset.title} className="w-full h-full object-cover" loading="lazy" />}
+                  {asset.preview_url && <img src={asset.large_url || asset.preview_url} alt={asset.title} className="w-full h-full object-cover" loading="lazy" />}
                 </div>
               ))}
             </div>

@@ -36,6 +36,11 @@ func NewRSSIngester(s *store.BlogUpdateStore) *RSSIngester {
 				Filter: "",
 			},
 			{
+				URL:    "https://www.nasa.gov/missions/artemis/feed/",
+				Source: "artemis_blog",
+				Filter: "",
+			},
+			{
 				URL:    "https://www.nasa.gov/rss/dyn/breaking_news.rss",
 				Source: "nasa_news",
 				Filter: "artemis",

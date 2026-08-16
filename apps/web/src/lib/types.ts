@@ -64,6 +64,7 @@ export interface MediaAsset {
   photographer?: string;
   keywords: string[];
   preview_url: string;
+  large_url?: string;
 }
 
 export interface MediaSearchResult {

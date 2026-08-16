@@ -23,19 +23,26 @@ export function UpdateCard({ update }: { update: BlogUpdate }) {
       rel="noopener noreferrer"
       className="block panel panel-hover p-4"
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-4">
         {update.image_url && (
-          <img src={update.image_url} alt="" className="w-14 h-14 rounded-md object-cover shrink-0" />
+          <img
+            src={update.image_url}
+            alt=""
+            className="w-24 h-24 rounded-md object-cover shrink-0"
+            loading="lazy"
+          />
         )}
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 mb-1 flex-wrap">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
             <span className={`label ${sourceColors[update.source] ?? "bg-space-slate/50 text-muted border-subtle"} px-1.5 py-0.5 rounded border`}>
               {sourceLabels[update.source] ?? update.source}
             </span>
             <span className="text-faint text-xs">{timeAgo}</span>
           </div>
-          <h3 className="text-sm font-medium line-clamp-2">{update.title}</h3>
-          {update.summary && <p className="text-muted text-sm mt-0.5 line-clamp-2">{update.summary}</p>}
+          <h3 className="text-sm font-medium line-clamp-2 leading-snug">{update.title}</h3>
+          {update.summary && (
+            <p className="text-muted text-sm mt-1 line-clamp-3">{update.summary}</p>
+          )}
         </div>
       </div>
     </a>

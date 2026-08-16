@@ -130,11 +130,18 @@ func (c *ImagesClient) Search(ctx context.Context, query, mediaType string, year
 		d := item.Data[0]
 
 		var previewURL string
+		var largeURL string
 		for _, link := range item.Links {
-			if link.Rel == "preview" {
+			switch link.Rel {
+			case "preview":
 				previewURL = link.Href
-				break
+			case "large":
+				largeURL = link.Href
 			}
+		}
+		// Fallback: construct large URL from nasa_id if not provided
+		if largeURL == "" {
+			largeURL = fmt.Sprintf("https://images-assets.nasa.gov/image/%s/%s~large.jpg", d.NasaID, d.NasaID)
 		}
 
 		desc := d.Description
@@ -152,6 +159,7 @@ func (c *ImagesClient) Search(ctx context.Context, query, mediaType string, year
 			Photographer: d.Photographer,
 			Keywords:     d.Keywords,
 			PreviewURL:   previewURL,
+			LargeURL:     largeURL,
 		})
 	}
 

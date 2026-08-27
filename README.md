@@ -55,5 +55,5 @@ the planning notes without rechecking the current primary source.
 
 ## License
 
-No project-wide license has been declared. NASA content and marks remain subject
-to their respective usage and attribution rules.
+The project source code is licensed under `GPL-3.0-or-later`. See [LICENSE](LICENSE).
+NASA content and marks remain subject to their respective usage and attribution rules.

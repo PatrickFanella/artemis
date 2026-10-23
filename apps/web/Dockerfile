@@ -1,7 +1,7 @@
 # =============================================================================
 # Stage 1: Build (context = repo root)
 # =============================================================================
-FROM node:22-alpine AS builder
+FROM node:22.23.4-alpine@sha256:fe4f6d74e20370acb04ad889077d14d0f64a9c8ea6a42bc60cddf1e844699914 AS builder
 
 WORKDIR /build
 
@@ -15,7 +15,7 @@ RUN pnpm --filter @artemis/web build
 # =============================================================================
 # Stage 2: Serve with Nginx
 # =============================================================================
-FROM nginx:alpine
+FROM nginx:1.31.7-alpine@sha256:892bb2152464f0c5d8972593a5f5afaf8054552580b699d95f8ff4af08c2d33d
 
 RUN rm /etc/nginx/conf.d/default.conf
 

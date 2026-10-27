@@ -1,0 +1,67 @@
+name: CI
+'on':
+  pull_request: {}
+  push:
+    branches:
+    - main
+permissions:
+  contents: read
+jobs:
+  api:
+    name: Go backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-go@v6
+      with:
+        go-version: 1.27.3
+        cache: false
+    - name: Verify, test and build API
+      shell: bash
+      run: |-
+        go mod verify
+        go vet ./...
+        go test -count=1 ./...
+        go build ./...
+      working-directory: apps/api
+  web:
+    name: Web frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '24'
+    - name: Install locked workspace
+      shell: bash
+      run: |-
+        npm install --global pnpm@10.33.0
+        pnpm install --frozen-lockfile
+    - name: Lint web
+      shell: bash
+      run: pnpm --filter @artemis/web lint
+    - name: Typecheck and compile browser and SSR entrypoints
+      shell: bash
+      run: |-
+        pnpm --filter @artemis/web exec tsc -b
+        pnpm --filter @artemis/web exec vite build
+        pnpm --filter @artemis/web exec vite build --ssr scripts/prerender.ts --outDir .prerender
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: always()
+    needs:
+    - api
+    - web
+    steps:
+    - name: Require every quality job to succeed
+      shell: bash
+      run: |-
+        test "$API_RESULT" = success
+        test "$WEB_RESULT" = success
+      env:
+        API_RESULT: ${{ needs.api.result }}
+        WEB_RESULT: ${{ needs.web.result }}

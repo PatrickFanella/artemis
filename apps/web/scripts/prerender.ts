@@ -13,6 +13,14 @@ import { dirname, join, resolve } from "node:path";
 import { setSSRData, ssrDataScript } from "@/lib/ssrData";
 import { SSR_KEYS } from "@/lib/ssrKeys";
 import { render } from "@/entry-server";
+import type {
+  BlogUpdate,
+  EventsResponse,
+  MediaSearchResult,
+  Milestone,
+  Mission,
+  MissionSection,
+} from "@/lib/types";
 
 // ---------------------------------------------------------------------------
 // Config
@@ -144,35 +152,43 @@ async function main() {
   console.log(`\n[prerender] fetching data from ${API_URL} …`);
 
   // ---------- fetch data ----------
-  let missions: any[];
-  let latestUpdates: any[];
-  let allUpdates: any[];
-  let homeMedia: any;
-  let pageMedia: any;
+  let missions: Mission[];
+  let latestUpdates: BlogUpdate[];
+  let allUpdates: BlogUpdate[];
+  let homeMedia: MediaSearchResult;
+  let pageMedia: MediaSearchResult;
 
   try {
     [missions, latestUpdates, allUpdates, homeMedia, pageMedia] =
       await Promise.all([
-        fetchJSON<any[]>("/api/v1/missions"),
-        fetchJSON<any[]>("/api/v1/updates/latest"),
-        fetchJSON<any[]>("/api/v1/updates?limit=50"),
-        fetchJSON<any>("/api/v1/media?q=artemis+ii&type=image"),
-        fetchJSON<any>("/api/v1/media?q=artemis+II"),
+        fetchJSON<Mission[]>("/api/v1/missions"),
+        fetchJSON<BlogUpdate[]>("/api/v1/updates/latest"),
+        fetchJSON<BlogUpdate[]>("/api/v1/updates?limit=50"),
+        fetchJSON<MediaSearchResult>("/api/v1/media?q=artemis+ii&type=image"),
+        fetchJSON<MediaSearchResult>("/api/v1/media?q=artemis+II"),
       ]);
-  } catch (err: any) {
-    console.warn(`[prerender] API unreachable — skipping prerender (${err.message})`);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn(`[prerender] API unreachable — skipping prerender (${message})`);
     process.exit(0);
   }
 
   // ---------- per-mission data ----------
-  const missionData: Record<string, any> = {};
+  const missionData: Record<
+    string,
+    {
+      sections: MissionSection[];
+      milestones: Milestone[];
+      events: EventsResponse;
+    }
+  > = {};
   for (const m of missions) {
     const id = m.id;
     try {
       const [sections, milestones, events] = await Promise.all([
-        fetchJSON<any[]>(`/api/v1/missions/${id}/sections`),
-        fetchJSON<any[]>(`/api/v1/missions/${id}/milestones`),
-        fetchJSON<any>(`/api/v1/missions/${id}/events`),
+        fetchJSON<MissionSection[]>(`/api/v1/missions/${id}/sections`),
+        fetchJSON<Milestone[]>(`/api/v1/missions/${id}/milestones`),
+        fetchJSON<EventsResponse>(`/api/v1/missions/${id}/events`),
       ]);
       missionData[id] = { sections, milestones, events };
     } catch {
@@ -205,7 +221,7 @@ async function main() {
   const routes = [
     "/",
     "/missions",
-    ...missions.map((m: any) => `/missions/${m.id}`),
+    ...missions.map((m) => `/missions/${m.id}`),
     "/schedule",
     "/updates",
     "/media",
@@ -220,7 +236,7 @@ async function main() {
     let meta = SEO[path];
     if (!meta && path.startsWith("/missions/")) {
       const id = path.split("/").pop()!;
-      const m = missions.find((x: any) => x.id === id);
+      const m = missions.find((x) => x.id === id);
       if (m) {
         meta = {
           title: `${m.name} — NASA Artemis Mission`,

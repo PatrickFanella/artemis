@@ -1,0 +1,74 @@
+name: PR CI
+
+# Pull-request checks on GitHub-hosted runners. Main-branch builds and deploys
+# stay in .gitea/workflows on Gitea Actions.
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: Go backend
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version: 1.27.3
+          cache: false
+      - name: Verify, test and build API
+        working-directory: apps/api
+        run: |
+          go mod verify
+          go vet ./...
+          go test -count=1 ./...
+          go build ./...
+
+  web:
+    name: Web frontend
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Install locked workspace
+        run: |
+          npm install --global pnpm@10.33.0
+          pnpm install --frozen-lockfile
+      - name: Lint web
+        run: pnpm --filter @artemis/web lint
+      - name: Typecheck and compile browser and SSR entrypoints
+        run: |
+          pnpm --filter @artemis/web exec tsc -b
+          pnpm --filter @artemis/web exec vite build
+          pnpm --filter @artemis/web exec vite build --ssr scripts/prerender.ts --outDir .prerender
+
+  ci-gate:
+    name: CI gate
+    if: always()
+    needs: [api, web]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require every verification job
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          results = json.loads(os.environ["RESULTS"])
+          expected = {'api', 'web'}
+          assert set(results) == expected, results
+          for name, result in results.items():
+              assert result["result"] == "success", name + " did not pass"
+          PY
